@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Maruthuvam.AI – AI Health Copilot</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap">
+<style>
+:root{--bg:#f4f8f7;--card:#fff;--tx:#12302b;--mu:#5d7a74;--pr:#0f9d83;--pr2:#e1f5f0;--wa:#d97706;--wb:#fff4e0;--bd:#d9e6e3;--rd:#c2410c;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0d1a18;--card:#14262a;--tx:#e6f3f0;--mu:#8fb0a9;--pr:#2dd4b0;--pr2:#12352f;--wa:#fbbf24;--wb:#3a2f12;--bd:#244039;--rd:#fb923c}}
+:root[data-theme="dark"]{--bg:#0d1a18;--card:#14262a;--tx:#e6f3f0;--mu:#8fb0a9;--pr:#2dd4b0;--pr2:#12352f;--wa:#fbbf24;--wb:#3a2f12;--bd:#244039;--rd:#fb923c}
+*{box-sizing:border-box}html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--tx);font:15px/1.5 "Segoe UI",system-ui,-apple-system,sans-serif}
+header{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;padding:14px 18px;background:var(--card);border-bottom:1px solid var(--bd);position:sticky;top:env(safe-area-inset-top,0px);z-index:5}
+h1{font-size:20px;margin:0;color:var(--pr)}h1 small{color:var(--mu);font-weight:400;font-size:12px;margin-left:6px}
+nav{display:flex;gap:6px;flex-wrap:wrap}
+button,select,input{font:inherit;color:var(--tx)}
+.tab,.btn{border:1px solid var(--bd);background:var(--card);padding:7px 14px;border-radius:999px;cursor:pointer}
+.tab.on,.btn.p{background:var(--pr);color:#fff;border-color:var(--pr)}
+main{max-width:980px;margin:0 auto;padding:16px}
+.grid{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:16px}
+.card h3{margin:0 0 8px;font-size:15px}.mu{color:var(--mu);font-size:13px}
+.big{font-size:26px;font-weight:700}
+.bar{height:8px;background:var(--pr2);border-radius:9px;overflow:hidden;margin-top:6px}.bar i{display:block;height:100%;background:var(--pr)}
+.alert{background:var(--wb);color:var(--wa);border-radius:10px;padding:8px 12px;margin:6px 0;font-size:14px}
+.ok{background:var(--pr2);color:var(--pr)}
+label{display:block;font-size:13px;color:var(--mu);margin-top:8px}
+input,select{width:100%;padding:8px 10px;border:1px solid var(--bd);border-radius:9px;background:var(--bg)}
+.row{display:flex;gap:8px;align-items:center}.row>*{flex:1}
+.tag{font-size:11px;background:var(--pr2);color:var(--pr);padding:2px 8px;border-radius:99px;margin-left:6px}
+.chat{height:300px;overflow-y:auto;border:1px solid var(--bd);border-radius:10px;padding:10px;background:var(--bg);margin-bottom:8px}
+.m{max-width:85%;padding:8px 12px;border-radius:12px;margin:6px 0;white-space:pre-wrap}
+.u{background:var(--pr);color:#fff;margin-left:auto}.a{background:var(--card);border:1px solid var(--bd)}
+.hid{display:none}.chart{width:100%;overflow-x:auto}
+li{display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid var(--bd);list-style:none}ul{padding:0;margin:0}
+.x{background:none;border:0;color:var(--rd);cursor:pointer}
+.sos{margin-top:18px;text-align:center;font-size:13px;color:var(--mu)}
+#login{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:16px}.lc{width:100%;max-width:380px}body:not(.in) header,body:not(.in) main{display:none}body.in #login{display:none}
+:root{--g:linear-gradient(135deg,#0f9d83,#2f80ed)}
+body{font-family:"Poppins","Segoe UI",system-ui,sans-serif;background:radial-gradient(circle at 10% 0%,var(--pr2),transparent 45%),var(--bg);background-attachment:fixed}
+body::before,body::after{content:"";position:fixed;border-radius:50%;filter:blur(90px);opacity:.2;z-index:-1;pointer-events:none;animation:float 14s ease-in-out infinite alternate}
+body::before{width:420px;height:420px;background:#0f9d83;top:-140px;right:-120px}
+body::after{width:360px;height:360px;background:#2f80ed;bottom:-120px;left:-100px;animation-delay:-6s}
+@keyframes float{to{transform:translate(-40px,60px) scale(1.15)}}
+@keyframes rise{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+@keyframes pop{from{opacity:0;transform:scale(.9)}to{opacity:1;transform:none}}
+@keyframes grow{from{width:0}}
+@keyframes bars{from{transform:scaleY(0)}}
+@keyframes beat{0%,100%{transform:scale(1)}14%{transform:scale(1.2)}28%{transform:scale(1)}42%{transform:scale(1.14)}}
+@keyframes ecg{from{stroke-dashoffset:400}to{stroke-dashoffset:0}}
+header{background:color-mix(in srgb,var(--card) 75%,transparent);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
+h1{background:var(--g);-webkit-background-clip:text;background-clip:text;color:transparent}
+h1 small{-webkit-text-fill-color:var(--mu)}
+.card{background:color-mix(in srgb,var(--card) 82%,transparent);backdrop-filter:blur(10px);box-shadow:0 6px 24px rgba(15,157,131,.08);transition:transform .25s,box-shadow .25s}
+.card:hover{transform:translateY(-4px);box-shadow:0 14px 34px rgba(15,157,131,.18)}
+section:not(.hid){animation:rise .5s ease both}
+.grid>.card{animation:rise .6s ease both}
+.grid>.card:nth-child(2){animation-delay:.08s}.grid>.card:nth-child(3){animation-delay:.16s}.grid>.card:nth-child(4){animation-delay:.24s}
+.tab,.btn{transition:transform .2s,box-shadow .2s,background .2s}
+.tab:hover,.btn:hover{transform:translateY(-2px);box-shadow:0 6px 16px rgba(15,157,131,.25)}
+.tab:active,.btn:active{transform:scale(.96)}
+.tab.on,.btn.p{background:var(--g);border-color:transparent;color:#fff}
+.btn:disabled{opacity:.65;cursor:wait}
+.bar i{background:var(--g);animation:grow 1.1s cubic-bezier(.2,.8,.2,1)}
+#chart rect{transform-box:fill-box;transform-origin:bottom;animation:bars .8s cubic-bezier(.2,.8,.2,1) both}
+.m{animation:pop .3s ease both}
+.alert{animation:rise .4s ease both;border-left:4px solid currentColor}
+.big{background:var(--g);-webkit-background-clip:text;background-clip:text;color:transparent}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--pr);box-shadow:0 0 0 3px var(--pr2)}
+.lc{animation:rise .7s ease both;padding:26px;box-shadow:0 20px 60px rgba(15,157,131,.25)}
+#login h1{font-size:28px}
+.hb{display:inline-block;animation:beat 1.6s infinite}
+.ecg{display:block;margin:6px auto 0}.ecg path{stroke:var(--pr);stroke-width:3;fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:400;animation:ecg 2.4s linear infinite}
+nav{overflow-x:auto;flex-wrap:nowrap;max-width:100%;scrollbar-width:none}.tab{white-space:nowrap}
+@media(prefers-reduced-motion:reduce){*,::before,::after{animation:none!important;transition:none!important}}
+:root{--bg:#fff0f3;--card:#fffafb;--tx:#4a1d2b;--mu:#9a6677;--pr:#e0457b;--pr2:#ffe1ea;--bd:#f6cfd9;--wa:#c2410c;--wb:#fff1e0;--rd:#be123c;--g:linear-gradient(135deg,#f472b6,#e0457b)}
+body{background:radial-gradient(circle at 10% 0%,#ffd6e2,transparent 50%),var(--bg);background-attachment:fixed}
+body::before{background:#fb7185}body::after{background:#f9a8d4}
+.card{box-shadow:0 6px 24px rgba(224,69,123,.1)}.card:hover{box-shadow:0 14px 34px rgba(224,69,123,.22)}
+.tab:hover,.btn:hover{box-shadow:0 6px 16px rgba(224,69,123,.28)}
+.alert.ok{background:#e8f8ee;color:#15803d}
+#login{gap:28px;flex-wrap:wrap;position:relative;overflow:hidden;padding:24px 16px}
+.lc{position:relative;z-index:1;box-shadow:0 20px 60px rgba(224,69,123,.25)}
+.lp-prev{max-width:440px;width:100%;padding:14px;position:relative;z-index:1;animation:rise .7s ease both}
+.pv-top{display:flex;gap:6px;align-items:center;margin-bottom:10px}.pv-top i{width:10px;height:10px;border-radius:50%;background:#fbb6c8}.pv-top span{margin-left:8px;font-size:11px;color:var(--mu);background:var(--pr2);padding:2px 10px;border-radius:99px}
+.pv-tabs{display:flex;gap:6px;overflow:hidden;margin-bottom:10px}.pv-tabs b{font-size:11px;font-weight:500;padding:4px 10px;border-radius:99px;background:var(--pr2);color:var(--mu);white-space:nowrap}.pv-tabs b.on{background:var(--g);color:#fff}
+.pv-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.pv-grid>div{background:var(--pr2);border-radius:10px;padding:8px}.pv-grid small{display:block;font-size:11px;color:var(--mu)}.pv-grid strong{font-size:18px}
+.pv-chart{display:flex;align-items:flex-end;gap:8px;height:70px;margin:12px 0}.pv-chart i{flex:1;border-radius:6px 6px 0 0;background:var(--g);transform-origin:bottom;animation:bars .9s both}.pv-chart i:nth-child(odd){animation-delay:.15s}
+.pills{position:absolute;inset:0;pointer-events:none;z-index:0}
+.pl{position:absolute;display:block;transform:rotate(var(--r,0deg));animation:drift 9s ease-in-out infinite alternate}
+.pl.c{width:70px;height:28px;border-radius:99px;background:linear-gradient(90deg,#fff 50%,#fbd3df 50%);box-shadow:inset 0 -4px 6px rgba(224,69,123,.18),0 10px 22px rgba(224,69,123,.22)}
+.pl.r{width:38px;height:38px;border-radius:50%;background:radial-gradient(circle at 30% 28%,#fff,#fde1ea);box-shadow:inset 0 -4px 6px rgba(224,69,123,.16),0 10px 22px rgba(224,69,123,.2)}
+.pl.r::after{content:"";position:absolute;left:18%;right:18%;top:50%;height:2px;background:#f4b6c8;border-radius:2px}
+.pl.o{width:54px;height:24px;border-radius:12px;background:linear-gradient(#fff,#fde8ee);box-shadow:inset 0 -4px 6px rgba(224,69,123,.16),0 10px 22px rgba(224,69,123,.2)}
+@keyframes drift{to{transform:translateY(-26px) rotate(calc(var(--r,0deg) + 25deg))}}
+.deco{display:none}
+body.in .deco{display:block;position:fixed;inset:0;pointer-events:none;z-index:-1;overflow:hidden}
+body.in{--pr2:#f6e6ff;--bd:#ead3f7;--g:linear-gradient(135deg,#f472b6,#a855f7);background:radial-gradient(circle at 12% 8%,#ffc2d9 0,transparent 45%),radial-gradient(circle at 90% 20%,#dcc3ff 0,transparent 45%),radial-gradient(circle at 50% 100%,#ecbcff 0,transparent 50%),#fdeaf4;background-attachment:fixed}
+body.in::before{background:#c084fc}body.in::after{background:#f472b6}
+.steth{position:absolute;color:#b46ae0;opacity:.3;transform:rotate(var(--r,0deg));animation:drift 12s ease-in-out infinite alternate}
+.pl.c.v{background:linear-gradient(90deg,#f7ebff 50%,#d2a8f7 50%)}
+.deco .pl{opacity:.9}
+#intro{display:none;position:fixed;inset:0;z-index:100;align-items:center;justify-content:center;flex-direction:column;background:linear-gradient(135deg,#ffb3d1,#e9a8ff 50%,#a78bfa);overflow:hidden}
+#intro.on{display:flex}#intro.off{opacity:0;transition:opacity .45s}
+.ist{width:min(46vw,260px);color:#fff;filter:drop-shadow(0 12px 24px rgba(120,40,160,.35));animation:zout 3s cubic-bezier(.2,.8,.2,1) both}
+.it{text-align:center;color:#fff;margin-top:14px;animation:rise 1.2s .6s ease both}
+.it h2{margin:0;font-size:28px}.it p{margin:4px 0 12px;opacity:.9}
+.it .bar{width:200px;margin:auto;background:rgba(255,255,255,.35)}.it .bar i{background:#fff;width:100%;animation:grow 3s linear both}
+#intro .pl{animation:zout 3s cubic-bezier(.2,.8,.2,1) both}
+@keyframes zout{from{opacity:0;transform:scale(3.4) rotate(calc(var(--r,0deg) + 100deg))}25%{opacity:1}to{opacity:1;transform:scale(1) rotate(var(--r,0deg))}}
+#lg{display:none;position:fixed;inset:0;z-index:90;align-items:center;justify-content:center;background:rgba(120,60,160,.35);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);padding:16px}#lg.on{display:flex}
+#lg .card{max-width:420px;width:100%;text-align:center;animation:pop .4s both}#lg h2{margin:0 0 6px}
+.lgb{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}.lgb button{padding:16px 8px;font-size:18px;border-radius:14px;border:1px solid var(--bd);background:var(--card);cursor:pointer;color:var(--tx);transition:transform .2s}.lgb button:hover{transform:translateY(-3px) scale(1.03);background:var(--g);color:#fff}
+#as{display:none;position:fixed;right:14px;bottom:calc(14px + env(safe-area-inset-bottom,0px));width:min(380px,calc(100vw - 28px));z-index:30;padding:12px;flex-direction:column;gap:8px}#as.on{display:flex}
+#alu{position:fixed;right:14px;bottom:calc(14px + env(safe-area-inset-bottom,0px));z-index:29;border-radius:50%;width:54px;height:54px;font-size:22px;padding:0}#as.on+#alu{display:none}
+.ah{display:flex;justify-content:space-between;align-items:center}.ah button{border:0;background:none;cursor:pointer;font-size:16px}
+#ac{height:210px;margin:0}
+.chips{display:flex;flex-wrap:wrap;gap:6px}.chips button{border:1px solid var(--bd);background:var(--pr2);border-radius:99px;padding:5px 10px;cursor:pointer;font-size:12px;color:var(--tx)}
+body:not(.in) #as,body:not(.in) #alu,body:not(.in) #lg{display:none!important}
+#p-dash:not(.hid){display:grid;grid-template-columns:repeat(12,1fr);gap:14px}
+#p-dash>*{grid-column:span 12;margin:0!important}
+@media(min-width:900px){#p-dash>:nth-child(4){grid-column:span 5}#p-dash>:nth-child(5){grid-column:span 7}}
+.hero{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;padding:24px;border-radius:22px;color:#fff;background:linear-gradient(120deg,#f472b6,#a855f7 60%,#6366f1);box-shadow:0 18px 40px rgba(168,85,247,.35);position:relative;overflow:hidden}
+.hero::after{content:"";position:absolute;width:240px;height:240px;border-radius:50%;background:rgba(255,255,255,.14);right:-60px;top:-90px}
+.hero::before{content:"";position:absolute;width:150px;height:150px;border-radius:50%;background:rgba(255,255,255,.1);left:38%;bottom:-70px}
+.hg{font-size:26px;font-weight:700}.hs{color:rgba(255,255,255,.88)!important}
+.qa{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px;position:relative;z-index:1}
+.qa .btn{background:rgba(255,255,255,.22);color:#fff;border-color:rgba(255,255,255,.45);backdrop-filter:blur(6px)}
+.score{text-align:center;position:relative;z-index:1}.score small{display:block;margin-top:4px;opacity:.9}
+.ring{position:relative;width:60px;height:60px}.ring svg{width:100%;height:100%;transform:rotate(-90deg)}
+.ring circle{fill:none;stroke:var(--pr2);stroke-width:4}
+.ring .pg{stroke:var(--ac,var(--pr));stroke-linecap:round;stroke-dasharray:113.1;stroke-dashoffset:calc(113.1 * (1 - var(--p)));animation:ringIn 1.3s cubic-bezier(.2,.8,.2,1) both}
+@keyframes ringIn{from{stroke-dashoffset:113.1}}
+.ring span{position:absolute;inset:0;display:grid;place-items:center;font-size:12px;font-weight:600}
+.score .ring{width:104px;height:104px}.score .ring circle{stroke:rgba(255,255,255,.3)}.score .ring .pg{stroke:#fff}.score .ring span{font-size:28px;color:#fff}
+.tile{position:relative;overflow:hidden;padding-right:88px;border-top:3px solid var(--ac)}
+.tile .ring{position:absolute;right:12px;top:14px}
+#stats .tile:nth-child(1){--ac:#38bdf8}#stats .tile:nth-child(2){--ac:#a855f7}#stats .tile:nth-child(3){--ac:#fb923c}#stats .tile:nth-child(4){--ac:#f472b6}
+.tile:hover{box-shadow:0 14px 34px color-mix(in srgb,var(--ac) 35%,transparent)}
+html{background:#fdeaf4;color-scheme:light}
+body.in{min-height:100vh}
+.card{background:#fff3f8!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important}
+header{background:#ffeaf3!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important}
+.chat,pre,.chart{background:#fff0f6!important}
+#chart rect{fill:var(--pr)}#chart text{fill:var(--mu)}
+:root:root:root{--bg:#fff0f3;--card:#fffafb;--tx:#4a1d2b;--mu:#9a6677;--pr:#e0457b;--pr2:#ffe1ea;--bd:#f6cfd9;--wa:#c2410c;--wb:#fff1e0;--rd:#be123c;--g:linear-gradient(135deg,#f472b6,#e0457b);color-scheme:light}
+body{color:#4a1d2b}
+.mu{color:#9a6677}
+
+/* ===== Dashboard v2: larger, bento, aurora ===== */
+main:has(#p-dash:not(.hid)){max-width:1200px;padding:22px 20px 40px}
+#p-dash .hero{min-height:290px;padding:44px 48px;border-radius:34px;align-items:center;background:radial-gradient(60% 90% at 88% 10%,rgba(244,114,182,.75),transparent 60%),radial-gradient(55% 80% at 10% 100%,rgba(56,189,248,.55),transparent 62%),radial-gradient(50% 70% at 55% 0%,rgba(168,85,247,.7),transparent 60%),#1a1240;box-shadow:0 30px 70px -20px rgba(99,56,230,.55),inset 0 1px 0 rgba(255,255,255,.25);border:1px solid rgba(255,255,255,.18)}
+#p-dash .hero::after{width:380px;height:380px;right:-110px;top:-150px;background:radial-gradient(circle,rgba(255,255,255,.22),transparent 70%)}
+#p-dash .hero::before{width:260px;height:260px;left:42%;bottom:-130px;background:radial-gradient(circle,rgba(255,255,255,.14),transparent 70%)}
+#p-dash .hg{font-size:clamp(30px,4.6vw,52px);line-height:1.08;font-weight:700;letter-spacing:-.02em;position:relative;z-index:1}
+#p-dash .hs{font-size:16px;margin-top:8px;max-width:46ch;position:relative;z-index:1}
+#p-dash .qa{gap:10px;margin-top:22px}
+#p-dash .qa .btn{padding:11px 20px;font-size:15px;border-radius:999px;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.35);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
+#p-dash .qa .btn:hover{background:rgba(255,255,255,.3)}
+#p-dash .score{padding:22px 26px 16px;border-radius:30px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.3);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);box-shadow:0 0 60px rgba(244,114,182,.35)}
+#p-dash .score .ring{width:150px;height:150px;filter:drop-shadow(0 0 14px rgba(255,255,255,.55))}
+#p-dash .score .ring circle{stroke-width:3.2}
+#p-dash .score .ring span{font-size:44px;font-weight:700}
+#p-dash .score small{font-size:13px;letter-spacing:.14em;text-transform:uppercase;margin-top:8px}
+#p-dash #stats{grid-template-columns:repeat(4,1fr);gap:18px;margin-top:20px}
+#p-dash #stats .tile{min-height:170px;padding:24px 24px 22px;border:1px solid var(--bd);border-radius:28px;background:linear-gradient(160deg,#fff,#fff3f8)!important;box-shadow:0 14px 40px -18px color-mix(in srgb,var(--ac) 55%,transparent);display:flex;flex-direction:column;justify-content:space-between}
+#p-dash #stats .tile::before{content:"";position:absolute;width:190px;height:190px;border-radius:50%;right:-70px;top:-80px;background:radial-gradient(circle,color-mix(in srgb,var(--ac) 35%,transparent),transparent 70%);pointer-events:none}
+#p-dash #stats .tile .mu{font-size:14px;font-weight:600;position:relative}
+#p-dash #stats .tile .big{font-size:40px;line-height:1.05;font-weight:700;letter-spacing:-.02em;position:relative}
+#p-dash #stats .tile .ring{width:78px;height:78px;right:18px;top:auto;bottom:18px}
+#p-dash #stats .tile .ring span{font-size:15px}
+#p-dash #stats .tile .ring circle{stroke-width:4.5}
+#p-dash #stats .tile:hover{transform:translateY(-6px)}
+#p-dash .card{border-radius:26px;padding:22px 24px;border:1px solid var(--bd);box-shadow:0 14px 40px -22px rgba(168,85,247,.45)}
+#p-dash .card h3{font-size:17px;letter-spacing:-.01em;margin-bottom:12px}
+#p-dash .grid{gap:18px}
+#p-dash .grid[style]{grid-template-columns:1.2fr .8fr}
+@media(max-width:900px){#p-dash #stats{grid-template-columns:repeat(2,1fr)}#p-dash .grid[style]{grid-template-columns:1fr}#p-dash .hero{padding:30px 24px}}
+@media(max-width:480px){#p-dash #stats{grid-template-columns:1fr}#p-dash .score{width:100%}}
+</style></head><body>
+<div id="lg"><div class="card"><h2 id="lgh">🩺 Welcome to Maruthuvam.AI</h2><p class="mu">Choose your language · உங்கள் மொழியைத் தேர்ந்தெடுக்கவும் · अपनी भाषा चुनें · మీ భాషను ఎంచుకోండి</p><div class="lgb"><button data-l="English">English</button><button data-l="தமிழ்">தமிழ்</button><button data-l="हिन्दी">हिन्दी</button><button data-l="తెలుగు">తెలుగు</button></div></div></div>
+<div id="as" class="card"><div class="ah"><b>🤖 Maruthuvam Assistant</b><span><button id="asv" title="Voice on/off">🔊</button><button id="asx" title="Close">✕</button></span></div><div id="ac" class="chat"></div><div id="ach" class="chips"></div><div class="row"><input id="aq" placeholder="Type or speak…"><button class="btn" id="amic" style="flex:0">🎤</button><button class="btn p" id="asd" style="flex:0">Send</button></div></div><button id="alu" class="btn p">🤖</button>
+<div id="intro"><svg class="ist" viewBox="0 0 125 130"><use href="#st"/></svg><div class="it"><h2>Maruthuvam.AI</h2><p>Preparing your health profile…</p><div class="bar"><i></i></div></div><span class="pl c" style="top:10%;left:9%;--r:-28deg"></span><span class="pl r" style="top:18%;right:12%"></span><span class="pl o" style="top:42%;left:6%;--r:20deg"></span><span class="pl c v" style="top:60%;right:8%;--r:35deg"></span><span class="pl r" style="bottom:12%;left:16%"></span><span class="pl o" style="bottom:9%;right:24%;--r:-20deg"></span><span class="pl c" style="top:6%;left:48%;--r:12deg"></span><span class="pl c v" style="bottom:26%;left:6%;--r:-40deg"></span></div>
+<div id="login"><div class="pills"><span class="pl c" style="top:7%;left:5%;--r:-30deg"></span><span class="pl r" style="top:14%;right:9%;animation-delay:-3s"></span><span class="pl o" style="top:40%;left:3%;--r:20deg;animation-delay:-5s"></span><span class="pl c" style="top:62%;right:5%;--r:35deg;animation-delay:-2s"></span><span class="pl r" style="bottom:12%;left:12%;animation-delay:-6s"></span><span class="pl o" style="bottom:7%;right:20%;--r:-20deg;animation-delay:-4s"></span><span class="pl c" style="top:4%;left:46%;--r:12deg;animation-delay:-7s"></span></div>
+<div class="card lc"><h1 style="text-align:center"><span class="hb">🩺</span> Maruthuvam.AI</h1><svg class="ecg" width="220" height="50" viewBox="0 0 220 50"><path d="M0 28 H60 L72 28 L82 6 L96 46 L108 18 L116 28 H220"/></svg><p class="mu" style="text-align:center">Understand · Organize · Manage your health journey</p><label>Username</label><input id="lu" autocomplete="username"><label>Password</label><input id="lp" type="password" autocomplete="current-password"><div id="le" class="alert hid"></div><button class="btn p" id="go" style="width:100%;margin-top:14px">Login</button><p class="mu" style="text-align:center"><span id="swt">New here?</span> <button class="x" id="sw" style="color:var(--pr)">Create account</button></p></div></div>
+<div class="deco"><svg width="0" height="0" style="position:absolute"><symbol id="st" viewBox="0 0 125 130"><g fill="none" stroke="currentColor" stroke-width="6" stroke-linecap="round"><path d="M25 10 v35 a30 30 0 0 0 60 0 v-35"/><path d="M55 75 v25 a28 28 0 0 0 56 0 v-8"/><circle cx="25" cy="8" r="5"/><circle cx="85" cy="8" r="5"/><circle cx="111" cy="82" r="10" fill="currentColor"/></g></symbol></svg>
+<svg class="steth" style="top:11%;right:5%;width:150px;--r:14deg" viewBox="0 0 125 130"><use href="#st"/></svg>
+<svg class="steth" style="bottom:7%;left:4%;width:170px;--r:-18deg;animation-delay:-4s" viewBox="0 0 125 130"><use href="#st"/></svg>
+<svg class="steth" style="top:58%;right:34%;width:100px;--r:30deg;animation-delay:-8s" viewBox="0 0 125 130"><use href="#st"/></svg>
+<span class="pl c" style="top:6%;left:8%;--r:-28deg"></span><span class="pl r" style="top:20%;left:30%;animation-delay:-3s"></span><span class="pl o" style="top:36%;left:4%;--r:22deg;animation-delay:-5s"></span><span class="pl c v" style="top:8%;right:30%;--r:40deg;animation-delay:-2s"></span><span class="pl r" style="top:44%;right:6%;animation-delay:-6s"></span><span class="pl o" style="top:70%;right:12%;--r:-24deg;animation-delay:-4s"></span><span class="pl c" style="bottom:22%;left:22%;--r:18deg;animation-delay:-7s"></span><span class="pl r" style="bottom:6%;left:48%;animation-delay:-1s"></span><span class="pl c v" style="top:62%;left:8%;--r:-35deg;animation-delay:-9s"></span><span class="pl o" style="bottom:12%;right:34%;--r:12deg;animation-delay:-5s"></span></div>
+<header><h1>🩺 Maruthuvam.AI<small>Understand · Organize · Manage</small></h1>
+<nav id="nav"></nav>
+<select id="lang" style="width:auto" aria-label="AI language"><option>English</option><option>தமிழ்</option><option>हिन्दी</option><option>తెలుగు</option><option>Tanglish</option></select><span class="mu" id="hi"></span><button class="btn" id="out">Logout</button></header>
+<main>
+<section id="p-dash"><div class="hero"><div><div id="gh" class="hg"></div><div class="mu hs" id="hd"></div><div class="qa"><button class="btn" data-g="log">✍️ Log today</button><button class="btn" data-g="rec">📁 Add report</button><button class="btn" data-g="tri">🚨 Triage</button><button class="btn" data-g="ai">🤖 Ask AI</button></div></div><div class="score"><div class="ring" id="hsr"></div><small>Health score</small></div></div>
+ <div class="grid" id="stats"></div>
+ <div class="grid" style="margin-top:14px">
+  <div class="card"><h3>Smart alerts <span class="tag">rule-based</span></h3><div id="alerts"></div></div>
+  <div class="card"><h3>Profile & BMI</h3>
+   <div class="row"><div><label>Age</label><input id="age" type="number"></div><div><label>Height cm</label><input id="ht" type="number"></div><div><label>Weight kg</label><input id="wt" type="number"></div></div>
+   <div class="big" id="bmi" style="margin-top:10px"></div><div class="mu" id="bmit"></div></div>
+ </div>
+<div class="card" style="margin-top:14px"><h3>AI health insights <span class="tag">AI</span></h3><div id="ins" class="mu" style="white-space:pre-wrap">Analyses your medical records and daily wellness data together.</div><button class="btn p" id="insb" style="margin-top:10px">Analyse my health</button></div>
+ <div class="card" style="margin-top:14px"><div class="row"><h3 style="flex:2">Last 7 days</h3>
+  <select id="metric"><option value="water">Water</option><option value="sleep">Sleep</option><option value="steps">Steps</option><option value="mood">Mood</option></select></div>
+  <div class="chart" id="chart"></div><div class="mu" id="streak"></div></div>
+</section>
+<section id="p-log" class="hid"><div class="card" style="max-width:480px"><h3>Log today</h3>
+ <label>Water (glasses)</label><input id="lw" type="number" min="0">
+ <label>Sleep (hours)</label><input id="ls" type="number" step="0.5" min="0">
+ <label>Steps</label><input id="lst" type="number" min="0">
+ <label>Mood</label><select id="lm"><option value="5">😄 Great</option><option value="4">🙂 Good</option><option value="3" selected>😐 Okay</option><option value="2">😕 Low</option><option value="1">😞 Bad</option></select>
+ <button class="btn p" id="save" style="margin-top:12px">Save entry</button> <span class="mu" id="saved"></span></div></section>
+<section id="p-rem" class="hid"><div class="grid">
+ <div class="card"><h3>Medicine reminders</h3><div class="row"><input id="mn" placeholder="Medicine name"><input id="mt" type="time" style="max-width:120px"><button class="btn p" id="addm" style="flex:0">Add</button></div><ul id="ml"></ul></div>
+ <div class="card"><h3>Appointments</h3><div class="row"><input id="an" placeholder="Doctor / reason"><input id="ad" type="date" style="max-width:150px"><button class="btn p" id="adda" style="flex:0">Add</button></div><ul id="al"></ul></div></div></section>
+<section id="p-pro" class="hid"><div class="grid">
+<div class="card"><h3>🩺 Diagnoses & conditions</h3><div id="pdx"></div></div>
+<div class="card"><h3>💊 Medicines (all records)</h3><div id="pmd"></div></div>
+<div class="card"><h3>⚠️ Abnormal findings</h3><div id="pab"></div></div></div>
+<div class="card" style="margin-top:14px"><h3>📈 Lab trends</h3><div id="ptr"></div></div>
+<div class="card" style="margin-top:14px"><h3>🧭 Health timeline</h3><div id="ptl"></div></div></section>
+<section id="p-rec" class="hid">
+<div class="card" style="margin-bottom:14px"><h3>📷 Smart scan (OCR) <span class="tag">AI</span></h3><div class="mu">Upload a photo or scan of a prescription, lab report, discharge summary or diagnostic report. We extract medicines, dosages, test values, diagnoses and dates.</div><input id="scf" type="file" accept="image/*" multiple style="margin-top:8px"><button class="btn p" id="scb" style="margin-top:10px">Extract data</button><div id="scs" class="mu" style="margin-top:8px"></div><div id="scr"></div></div>
+<div class="card"><h3>Unified health records <span class="tag">all in one place</span></h3><div class="mu" id="rc"></div>
+<div class="grid"><div><label>Type</label><select id="rt"><option value="rx">💊 Prescription</option><option value="lab">🧪 Lab report</option><option value="dc">🏥 Discharge summary</option><option value="dx">🩻 Diagnostic record</option></select></div><div><label>Title</label><input id="rti" placeholder="e.g. Blood test – CBC"></div><div><label>Date</label><input id="rd" type="date"></div><div><label>Doctor / Hospital</label><input id="rsrc"></div></div>
+<label>Details (paste report text or key values)</label><textarea id="rtx" rows="4" style="width:100%;padding:8px 10px;border:1px solid var(--bd);border-radius:9px;background:var(--bg);color:var(--tx);font:inherit"></textarea>
+<label>Upload prescription / report (photo or text file)</label><input id="rfile" type="file" accept="image/*,.txt">
+<div class="row" style="margin-top:12px"><button class="btn p" id="rscan">🔍 Scan & extract (AI OCR)</button><button class="btn" id="radd">Add manually</button></div><div class="mu" id="rst" style="margin-top:6px"></div></div>
+<div class="card" style="margin-top:14px"><h3>AI unified summary <span class="tag">AI</span></h3><div id="rsum" class="mu" style="white-space:pre-wrap">One combined view of all your prescriptions, labs and reports.</div><button class="btn p" id="rsb" style="margin-top:10px">Generate summary</button></div>
+<div class="row" style="margin-top:14px"><select id="rf"><option value="all">All types</option><option value="rx">Prescriptions</option><option value="lab">Lab reports</option><option value="dc">Discharge summaries</option><option value="dx">Diagnostics</option></select><input id="rs" placeholder="Search records…"></div>
+<div id="rl"></div></section>
+<section id="p-abha" class="hid"><div class="grid">
+<div class="card"><h3>🆔 ABHA link <span class="tag">mock sandbox</span></h3><div id="ab"></div></div>
+<div class="card"><h3>🔗 FHIR R4 bundle <span class="tag">ABDM-style</span></h3><div class="mu" id="fc">Your records mapped to FHIR resources: Patient, Condition, MedicationRequest, Observation, DiagnosticReport, Composition.</div><pre id="fj" style="max-height:220px;overflow:auto;font-size:11px;background:var(--pr2);border-radius:10px;padding:8px"></pre><div class="row" style="margin-top:8px"><button class="btn" id="fprev">Preview</button><button class="btn p" id="fdl">Download JSON</button></div></div></div></section>
+<section id="p-near" class="hid"><div class="grid">
+<div class="card" style="grid-column:1/-1"><h3>📍 Nearby care <span class="tag">live location</span></h3><div class="mu" id="nls">Share your location to see real shops, clinics and hospitals around you, sorted by distance. If it is blocked, the Google Maps buttons below still work.</div><button class="btn p" id="nloc" style="margin-top:8px">📍 Use my location</button></div>
+<div class="card" style="grid-column:1/-1"><h3>🏪 Live nearby places <span class="tag">OpenStreetMap · real data</span></h3><div class="row" id="lc" style="flex-wrap:wrap"></div><div id="ll" style="margin-top:8px"><div class="mu">Tap “Use my location” to see live results.</div></div></div>
+<div class="card" style="grid-column:1/-1"><h3>🔎 Find now</h3><div class="row" id="nq" style="flex-wrap:wrap"></div></div>
+<div class="card" style="grid-column:1/-1"><h3>👨‍⚕️ Find a doctor by speciality</h3><div class="row" id="nsp" style="flex-wrap:wrap"></div></div>
+<div class="card" style="grid-column:1/-1"><h3>💊 Where to get my medicines</h3><div class="row"><input id="nmi" placeholder="Type a medicine name…"><button class="btn p" id="nmb" style="flex:0">Search</button></div><div id="nm"></div><div class="mu" style="margin-top:8px">Buy only against a valid prescription. Check expiry and the seller's licence. Jan Aushadhi stores sell the same generics at lower prices.</div></div>
+<div class="card" style="grid-column:1/-1"><h3>🛒 My medicine cart <span class="tag">order online</span></h3><div id="cart"></div><div id="co" class="hid"><div class="mu" id="cst" style="margin-top:8px"></div><div class="row" style="flex-wrap:wrap;margin-top:8px"><select id="cmode"><option>Home delivery</option><option>Store pickup</option></select><select id="cpay"><option>Cash on delivery</option><option>UPI on delivery</option></select></div><input id="cad" placeholder="Delivery address / landmark" style="margin-top:8px;width:100%"><label class="mu" style="display:block;margin-top:8px"><input type="checkbox" id="crx"> I have a valid prescription for these medicines</label><button class="btn p" id="cgo" style="margin-top:8px">✅ Place order</button><div class="mu" id="cmsg" style="margin-top:6px"></div></div><div class="mu" style="margin-top:8px">Prototype checkout: orders and status are simulated. Real payment and stock need a pharmacy partner API.</div></div>
+<div class="card" style="grid-column:1/-1"><h3>📦 My orders</h3><div id="ords"></div></div></div></section>
+<section id="p-tri" class="hid"><div class="grid">
+<div class="card" style="grid-column:1/-1"><h3>🚨 Emergency contacts (India) <span class="tag">tap to call</span></h3><div class="row" id="tc" style="flex-wrap:wrap"></div><div class="mu" style="margin-top:6px">112 works across India. Other numbers can differ by state.</div></div>
+<div class="card" style="grid-column:1/-1"><h3>🩺 Symptom triage <span class="tag">safety-first · no diagnosis</span></h3><div class="mu">Tick everything that applies, or type your symptoms (English or Tanglish). This only tells you how urgent it may be. It does not say what disease you have.</div><div id="tf" style="margin-top:8px"></div><textarea id="tt" placeholder="Describe in your own words…" style="width:100%;margin-top:8px;font:inherit;padding:10px;border:1px solid var(--bd);border-radius:10px;min-height:60px;box-sizing:border-box"></textarea><div class="row" style="flex-wrap:wrap;margin-top:8px;align-items:center"><select id="tsv"><option value="mild">Feels mild</option><option value="mod">Moderate</option><option value="severe">Severe / unbearable</option></select><label class="mu"><input type="checkbox" id="twr"> Getting worse quickly</label></div><button class="btn p" id="tgo" style="margin-top:10px">Check urgency</button></div>
+<div class="card hid" id="tres" style="grid-column:1/-1"></div>
+<div class="card" style="grid-column:1/-1"><h3>🏥 Nearby emergency hospitals</h3><div class="mu" id="tls">Share your location to see the closest hospitals, sorted by distance.</div><div class="row" style="flex-wrap:wrap;margin-top:8px"><button class="btn p" id="tloc">📍 Use my location</button><span id="tg" style="display:contents"></span></div><div id="tl" style="margin-top:8px"></div></div>
+</div></section>
+<section id="p-ai" class="hid"><div class="grid">
+ <div class="card" style="grid-column:1/-1"><h3>Symptom assistant <span class="tag">AI</span></h3>
+  <div class="chat" id="chat"><div class="m a">Hi! Tell me how you feel. I give general guidance only – not a diagnosis.</div></div>
+  <div class="row"><input id="q" placeholder="e.g. headache since morning…"><button class="btn p" id="send" style="flex:0">Send</button></div></div>
+ <div class="card"><h3>Weekly summary <span class="tag">AI</span></h3><div id="wk" class="mu">Get insights from your 7-day data.</div><button class="btn p" id="wkb" style="margin-top:10px">Generate</button></div>
+ <div class="card"><h3>Tip of the day <span class="tag">AI</span></h3><div id="tip" class="mu">Personalised to your goal.</div><button class="btn p" id="tipb" style="margin-top:10px">Get tip</button></div>
+ </div><div class="alert" style="margin-top:14px">⚠️ Maruthuvam.AI is not a medical diagnosis tool. Serious symptoms → see a doctor.</div></section>
+<div class="sos">🚨 Emergency (India): <b>108</b> ambulance · <b>112</b> national helpline</div>
+</main>
+<script>
+const $=id=>document.getElementById(id);
+const tabs=[["dash","📊 Dashboard"],["tri","🚨 Triage"],["log","✍️ Log"],["pro","🧬 Profile"],["rec","📁 Records"],["rem","⏰ Reminders"],["near","📍 Nearby"],["abha","🆔 ABHA"],["ai","🤖 AI Copilot"]];
+const G={water:8,sleep:8,steps:8000,mood:5};
+const day=o=>{const d=new Date();d.setDate(d.getDate()-o);return d.toISOString().slice(0,10)};
+const fresh=()=>({p:{age:25,ht:170,wt:65},logs:[],meds:[{n:"Vitamin D",t:"09:00"}],apps:[],recs:[]});
+let S=fresh(),KEY="vp_guest";
+function load(u){KEY="vp_"+u;S=fresh();
+try{const r=localStorage.getItem(KEY);if(r)S=JSON.parse(r)}catch(e){}
+S.recs=S.recs||[];if(!S.recs.length&&!S.rs){S.rs=1;S.recs=[{t:"dc",title:"Discharge – viral fever",d:day(40),src:"Govt Hospital",txt:"Admitted 3 days with high fever. Treated with IV fluids. Advice: rest, review after 1 week."},{t:"rx",title:"Fever & infection",d:day(20),src:"Dr. Kumar, City Clinic",txt:"Tab Paracetamol 500mg - 1 tab thrice daily x 3 days\nTab Azithromycin 500mg - once daily x 3 days"},{t:"lab",title:"Blood test – CBC & Sugar",d:day(12),src:"Sri Lab",txt:"Hemoglobin 10.8 g/dL (13-17)\nFasting glucose 118 mg/dL (70-99)\nWBC 8,200 (4,000-11,000)"}]}
+if(S.rs!==2){S.rs=2;S.recs=S.recs.filter(r=>!["Discharge – viral fever","Fever & infection","Blood test – CBC & Sugar"].includes(r.title)).concat(DEMO())}
+if(!S.logs.length){const w=[6,8,5,7,9,6],sl=[7,6.5,5,7.5,8,6],st=[6500,8200,3100,7000,9500,5200],m=[4,4,2,3,5,3];
+ for(let i=6;i>=1;i--)S.logs.push({d:day(i),water:w[6-i-0]??6,sleep:sl[6-i]??7,steps:st[6-i]??6000,mood:m[6-i]??3})}}
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}};
+const today=()=>S.logs.find(l=>l.d===day(0));
+function tab(n){if(n==="pro")renderProfile();if(n==="abha")renderAbha();if(n==="near")renderNear();if(n==="tri")renderTri();tabs.forEach(([k])=>{$("p-"+k).classList.toggle("hid",k!==n)});[...$("nav").children].forEach((b,i)=>b.classList.toggle("on",tabs[i][0]===n))}
+tabs.forEach(([k,l])=>{const b=document.createElement("button");b.className="tab";b.textContent=l;b.onclick=()=>tab(k);$("nav").appendChild(b)});
+function el(t,txt,c){const e=document.createElement(t);e.textContent=txt;if(c)e.className=c;return e}
+function render(){
+ const t=today()||{water:0,sleep:0,steps:0,mood:0};
+ $("stats").innerHTML="";
+ [["💧 Water",t.water,"water"," glasses"],["😴 Sleep",t.sleep,"sleep"," hrs"],["👣 Steps",t.steps,"steps",""],["🙂 Mood",t.mood,"mood","/5"]].forEach(([n,v,k,u])=>{
+  const c=el("div","","card");c.append(el("div",n,"mu"),el("div",v+u,"big"));
+  const pr=Math.min(1,v/G[k]),rg=document.createElement("div");rg.className="ring";rg.innerHTML='<svg viewBox="0 0 44 44"><circle cx="22" cy="22" r="18"/><circle class="pg" cx="22" cy="22" r="18" style="--p:'+pr+'"/></svg><span>'+Math.round(pr*100)+'%</span>';c.classList.add("tile");c.appendChild(rg);$("stats").appendChild(c)});
+ const sc=["water","sleep","steps","mood"].reduce((a,k)=>a+Math.min(1,(t[k]||0)/G[k]),0)/4;
+ $("hsr").innerHTML='<svg viewBox="0 0 44 44"><circle cx="22" cy="22" r="18"/><circle class="pg" cx="22" cy="22" r="18" style="--p:'+sc+'"/></svg><span>'+Math.round(sc*100)+'</span>';
+ $("hd").textContent=new Date().toLocaleDateString(undefined,{weekday:"long",day:"numeric",month:"long"})+" · "+(sc>.7?"You're doing great 🎉":sc>.4?"Good progress, keep going 💪":"Let's log today's health 🌱");
+ const p=S.p;$("age").value=p.age;$("ht").value=p.ht;$("wt").value=p.wt;
+ const bmi=p.wt/Math.pow(p.ht/100,2);$("bmi").textContent=bmi.toFixed(1);
+ $("bmit").textContent=bmi<18.5?"Underweight":bmi<25?"Healthy range":bmi<30?"Overweight":"Obese range";
+ const A=$("alerts");A.innerHTML="";const add=(m,ok)=>A.appendChild(el("div",m,"alert"+(ok?" ok":"")));
+ if(!today())add("Log today's entry to get live alerts.");
+ else{if(t.sleep<6)add("😴 Sleep under 6 hrs – try an earlier bedtime.");
+  if(t.water<G.water/2)add("💧 Water is low – drink a glass now.");
+  if(t.steps<3000)add("👣 Under 3000 steps – take a short walk.");
+  if(t.mood<=2)add("💛 Mood is low – talk to someone or rest.");
+  if(!A.children.length)add("✅ All good today. Keep it up!",1)}
+ chart();
+ let s=0;for(let i=0;i<7;i++){if(S.logs.find(l=>l.d===day(i)))s++;else break}
+ $("streak").textContent="🔥 Logging streak: "+s+" day"+(s==1?"":"s");renderRecs();renderProfile();
+ lists()}
+function chart(){const k=$("metric").value,d=[];for(let i=6;i>=0;i--){const l=S.logs.find(x=>x.d===day(i));d.push({d:day(i).slice(5),v:l?l[k]:0})}
+ const mx=Math.max(G[k],...d.map(x=>x.v)),W=Math.max(420,d.length*60);let s=`<svg viewBox="0 0 ${W} 180" width="100%" style="min-width:420px">`;
+ d.forEach((x,i)=>{const h=x.v/mx*120,X=i*60+14;s+=`<rect x="${X}" y="${140-h}" width="32" height="${h}" rx="6" fill="var(--pr)"/><text x="${X+16}" y="${134-h}" font-size="11" text-anchor="middle" fill="var(--tx)">${x.v}</text><text x="${X+16}" y="165" font-size="11" text-anchor="middle" fill="var(--mu)">${x.d}</text>`});
+ $("chart").innerHTML=s+"</svg>"}
+function lists(){[["ml",S.meds,m=>m.t+" · "+m.n],["al",S.apps,m=>m.d+" · "+m.n]].forEach(([id,arr,f])=>{const u=$(id);u.innerHTML="";arr.forEach((m,i)=>{const li=document.createElement("li");li.appendChild(el("span",f(m)));const x=el("button","✕","x");x.onclick=()=>{arr.splice(i,1);save();render()};li.appendChild(x);u.appendChild(li)})})}
+$("metric").onchange=chart;
+["age","ht","wt"].forEach(k=>$(k).onchange=()=>{S.p[k]=+$(k).value||S.p[k];save();render()});
+$("save").onclick=()=>{const e={d:day(0),water:+$("lw").value||0,sleep:+$("ls").value||0,steps:+$("lst").value||0,mood:+$("lm").value};
+ S.logs=S.logs.filter(l=>l.d!==e.d);S.logs.push(e);save();render();$("saved").textContent="Saved ✓";setTimeout(()=>$("saved").textContent="",2000)};
+$("addm").onclick=()=>{if($("mn").value){S.meds.push({n:$("mn").value,t:$("mt").value||"--:--"});$("mn").value="";save();render()}};
+$("adda").onclick=()=>{if($("an").value){S.apps.push({n:$("an").value,d:$("ad").value||"TBD"});$("an").value="";save();render()}};
+const TY={rx:"💊 Prescription",lab:"🧪 Lab report",dc:"🏥 Discharge summary",dx:"🩻 Diagnostic"};
+function renderRecs(){const f=$("rf").value,q=$("rs").value.toLowerCase(),u=$("rl");u.innerHTML="";
+ $("rc").textContent=S.recs.length+" records · "+Object.keys(TY).map(k=>S.recs.filter(r=>r.t===k).length+" "+TY[k].split(" ")[1].toLowerCase()).join(" · ");
+ const arr=S.recs.map((r,i)=>({...r,i})).filter(r=>(f==="all"||r.t===f)&&(r.title+(r.src||"")+(r.txt||"")).toLowerCase().includes(q)).sort((a,b)=>b.d.localeCompare(a.d));
+ if(!arr.length){u.appendChild(el("div","No records found. Add one above.","mu"));return}
+ arr.forEach(r=>{const c=el("div","","card");c.style.marginTop="10px";
+  const h=el("div","","row");h.append(el("b",TY[r.t]+" · "+r.title),el("span",r.d+(r.src?" · "+r.src:"")+(r.f?" · 📎"+r.f:""),"mu"));
+  const body=el("div",r.txt||"(no text)","mu");body.style.whiteSpace="pre-wrap";
+  const out=el("div","","m a hid");const r2=el("div","","row");r2.style.marginTop="8px";
+  const b=el("button","✨ Explain with AI","btn");b.onclick=()=>{out.classList.remove("hid");go(b,out,"Explain this "+TY[r.t]+" to a patient in simple words. Title: "+r.title+". Text: "+(r.txt||"none")+"\nGive: key points, what each abnormal value means in plain words (and why it may happen), simple next steps, and 2 questions to ask the doctor. Structured data: "+JSON.stringify(r.x||{})+" Keep it simple.")};
+  const x=el("button","Delete","btn");x.onclick=()=>{S.recs.splice(r.i,1);save();renderRecs()};
+  if(r.t==="rx"){const m=el("button","➕ Medicines → reminders (AI)","btn");m.onclick=async()=>{m.disabled=true;m.textContent="Reading…";if(r.x&&r.x.meds&&r.x.meds.length){r.x.meds.forEach(z=>S.meds.push({n:z.n+" "+(z.dose||""),t:"09:00"}));save();render();m.textContent="Added "+r.x.meds.length+" ✓";return}
+try{if(!sample)throw 0;const t=(await sample('Extract medicines from this prescription. Reply ONLY with a JSON array like [{"n":"Paracetamol 500mg","t":"09:00"}] where t is the 24h time of the first dose. Prescription: '+(r.txt||""),{cache:false})).text;const a=JSON.parse(t.replace(/```json|```/g,"").trim());a.forEach(z=>{if(z.n)S.meds.push({n:z.n,t:z.t||"--:--"})});save();render();m.textContent="Added "+a.length+" ✓"}catch(e){m.textContent="Couldn't read, retry";m.disabled=false}};r2.append(m)}
+  r2.append(b,x);c.append(h,body,xv(r),r2,out);u.appendChild(c)})}
+$("rf").onchange=renderRecs;$("rs").oninput=renderRecs;
+$("radd").onclick=async()=>{const t=$("rti").value.trim();if(!t)return;const fl=$("rfile").files[0];let txt=$("rtx").value;
+ if(fl&&fl.type==="text/plain"&&fl.size<20000)txt+="\n"+await fl.text();
+ S.recs.push({t:$("rt").value,title:t,d:$("rd").value||day(0),src:$("rsrc").value,txt,f:fl?fl.name:""});save();
+ ["rti","rsrc","rtx","rfile"].forEach(k=>$(k).value="");renderRecs()};
+$("rsb").onclick=()=>go($("rsb"),$("rsum"),"You are a health records assistant. Combine these fragmented records into ONE patient-friendly summary with sections: Current medicines, Key lab findings (flag abnormal), Past hospital stays, Follow-ups needed, Timeline.\nRecords:\n"+S.recs.map(r=>TY[r.t]+" | "+r.d+" | "+r.title+" | "+(r.src||"")+" | "+(r.txt||"").slice(0,600)).join("\n---\n"));
+function DEMO(){return[
+{t:"dc",title:"Discharge – viral fever",d:day(40),src:"Govt Hospital",txt:"Admitted 3 days with high fever. IV fluids given. Advice: rest, review after 1 week.",x:{dx:["Viral fever"],meds:[],tests:[]}},
+{t:"rx",title:"Fever & infection",d:day(20),src:"Dr. Kumar, City Clinic",txt:"Tab Paracetamol 500mg 1-1-1 x 3 days; Tab Azithromycin 500mg 1-0-0 x 3 days",x:{dx:["Upper respiratory infection"],meds:[{n:"Paracetamol",dose:"500 mg",freq:"Thrice daily",dur:"3 days"},{n:"Azithromycin",dose:"500 mg",freq:"Once daily",dur:"3 days"}],tests:[]}},
+{t:"lab",title:"Blood test – CBC & Sugar",d:day(12),src:"Sri Lab",txt:"Hb 10.8 g/dL (13-17), FBS 118 mg/dL (70-99), WBC 8200 (4000-11000)",x:{dx:[],meds:[],tests:[{n:"Hemoglobin",v:10.8,u:"g/dL",lo:13,hi:17},{n:"Fasting glucose",v:118,u:"mg/dL",lo:70,hi:99},{n:"WBC",v:8200,u:"/µL",lo:4000,hi:11000}]}},
+{t:"lab",title:"Follow-up blood test",d:day(3),src:"Sri Lab",txt:"Hb 11.6 g/dL (13-17), FBS 104 mg/dL (70-99)",x:{dx:[],meds:[],tests:[{n:"Hemoglobin",v:11.6,u:"g/dL",lo:13,hi:17},{n:"Fasting glucose",v:104,u:"mg/dL",lo:70,hi:99}]}}]}
+const flag=t=>t.lo==null||t.hi==null?"—":t.v<t.lo?"LOW":t.v>t.hi?"HIGH":"NORMAL";
+function xv(r){const d=el("div","");const x=r.x;if(!x)return d;d.style.margin="6px 0";if(x.meta){if(x.meta.lang||x.meta.hw)d.appendChild(el("div","🌐 "+(x.meta.lang||"")+(x.meta.hw?" · ✍️ handwritten":""),"mu"));if(x.meta.un.length)d.appendChild(el("div","⚠️ Please verify: "+x.meta.un.join(", "),"alert"))}
+ if(x.dx&&x.dx.length)d.appendChild(el("div","🩺 Diagnosis: "+x.dx.join(", ")));
+ (x.meds||[]).forEach(m=>d.appendChild(el("div","💊 "+m.n+" · "+(m.dose||"")+" · "+(m.freq||"")+" · "+(m.dur||""))));
+ (x.tests||[]).forEach(t=>{const f=flag(t);d.appendChild(el("div",(f==="NORMAL"?"✅ ":f==="—"?"🔹 ":"⚠️ ")+t.n+": "+t.v+" "+(t.u||"")+(t.lo!=null?" ("+t.lo+"–"+t.hi+")":"")+" "+f,"alert"+(f==="NORMAL"||f==="—"?" ok":"")))});
+ return d}
+function renderProfile(){const R=[...S.recs].sort((a,b)=>b.d.localeCompare(a.d));
+ const fill=(id,items,empty)=>{const e=$(id);e.innerHTML="";if(!items.length)e.appendChild(el("div",empty,"mu"));items.forEach(t=>e.appendChild(t))};
+ fill("pdx",[...new Set(R.flatMap(r=>(r.x&&r.x.dx)||[]))].map(d=>el("div","• "+d)),"No diagnoses extracted yet.");
+ const md=[];R.forEach(r=>((r.x&&r.x.meds)||[]).forEach(m=>md.push(m.n+" "+(m.dose||"")+" · "+(m.freq||"")+" ("+r.d+")")));S.meds.forEach(m=>md.push("⏰ "+m.n+" at "+m.t));
+ fill("pmd",md.map(t=>el("div","• "+t)),"No medicines yet.");
+ const ab=[];R.forEach(r=>((r.x&&r.x.tests)||[]).forEach(t=>{const f=flag(t);if(f==="LOW"||f==="HIGH")ab.push(el("div",t.n+" "+t.v+" "+(t.u||"")+" — "+f+" ("+r.d+")","alert"))}));
+ fill("pab",ab,"No abnormal values 🎉");
+ const tr={};[...R].reverse().forEach(r=>((r.x&&r.x.tests)||[]).forEach(t=>{(tr[t.n]=tr[t.n]||[]).push(t)}));
+ fill("ptr",Object.entries(tr).map(([n,a])=>{const d=el("div",n+": "+a.map(t=>t.v).join(" → ")+" "+(a[0].u||"")+" · now "+flag(a[a.length-1]));d.style.padding="4px 0";return d}),"Add lab reports to see trends.");
+ fill("ptl",R.map(r=>{const x=r.x||{},d=el("div","","card");d.style.marginTop="8px";d.append(el("b",r.d+" · "+TY[r.t]+" · "+r.title),el("div",(x.dx||[]).join(", ")+" "+((x.meds||[]).length?x.meds.length+" medicines ":"")+((x.tests||[]).length?x.tests.length+" tests":""),"mu"));return d}),"No records yet.")}
+$("rscan").onclick=async()=>{const fl=$("rfile").files[0],txt=$("rtx").value.trim(),st=$("rst");
+ if(!fl&&!txt){st.textContent="Upload a photo or paste the report text first.";return}
+ st.textContent="Reading document…";$("rscan").disabled=true;
+ try{if(!sample)throw{message:"AI isn't available here. Open this page in claude.ai."};
+  const o={cache:false};let body=txt;
+  if(fl&&fl.type.startsWith("image/")){const lim=await sample.limits();if(!lim.images)throw{message:"Image reading isn't enabled for this page."};o.images=[fl]}
+  else if(fl&&fl.type==="text/plain")body+="\n"+await fl.text();
+  else if(fl)throw{message:"Please upload a photo (JPG/PNG) or a text file."};
+  const p='You are a medical record OCR and extraction engine. The document may be HANDWRITTEN, bilingual or multilingual (English plus Tamil, Hindi, Telugu or other Indian languages) or a low quality photo: read carefully, convert drug and test names to standard English names, keep all fields in English, and list anything illegible or unsure in uncertain. Reply ONLY with JSON: {"lang":"languages detected","hw":false,"uncertain":[""],"type":"rx|lab|dc|dx","title":"","date":"YYYY-MM-DD or empty","doctor":"","diagnoses":[""],"meds":[{"n":"","dose":"","freq":"","dur":""}],"tests":[{"n":"","v":0,"u":"","lo":0,"hi":0}],"text":"short transcription"}. rx=prescription, lab=lab report, dc=discharge summary, dx=diagnostic or imaging. Use numbers for v, lo, hi; leave lo and hi out if there is no range. Text: '+body;
+  const res=await sample(p,o);const j=JSON.parse(res.text.replace(/```json|```/g,"").trim());
+  S.recs.push({t:TY[j.type]?j.type:"dx",title:j.title||"Scanned record",d:/^\d{4}-\d\d-\d\d$/.test(j.date||"")?j.date:day(0),src:j.doctor||"",txt:j.text||body,f:fl?fl.name:"",x:{meta:{lang:j.lang||"",hw:!!j.hw,un:(j.uncertain||[]).filter(Boolean)},dx:j.diagnoses||[],meds:j.meds||[],tests:(j.tests||[]).filter(t=>typeof t.v==="number")}});
+  save();["rti","rsrc","rtx","rfile"].forEach(k=>$(k).value="");renderRecs();st.textContent="Extracted ✓ Added to your health profile."}
+ catch(e){st.textContent=e.message||"Couldn't read this. Try a clearer photo."}
+ $("rscan").disabled=false};
+const EN=["📊 Dashboard","✍️ Log","🧬 Profile","📁 Records","⏰ Reminders","🆔 ABHA","🤖 AI Copilot","Login","Create account","Logout","Username","Password","Smart alerts","AI health insights","Analyse my health","Profile & BMI","Last 7 days","Save entry","Symptom assistant","Weekly summary","Tip of the day","Medicine reminders","Appointments","Unified health records","🔍 Scan & extract (AI OCR)","✨ Explain with AI","Delete","Understand · Organize · Manage","Understand · Organize · Manage your health journey","Log today","🩺 Diagnoses & conditions","💊 Medicines (all records)","⚠️ Abnormal findings","📈 Lab trends","🧭 Health timeline"];
+const DT={ta:["📊 டாஷ்போர்டு","✍️ பதிவு","🧬 சுயவிவரம்","📁 பதிவுகள்","⏰ நினைவூட்டல்","🆔 ABHA","🤖 AI உதவியாளர்","உள்நுழை","கணக்கு உருவாக்கு","வெளியேறு","பயனர்பெயர்","கடவுச்சொல்","எச்சரிக்கைகள்","AI சுகாதார பகுப்பாய்வு","என் ஆரோக்கியத்தை ஆராய்","சுயவிவரம் & BMI","கடந்த 7 நாட்கள்","சேமி","அறிகுறி உதவியாளர்","வாராந்திர சுருக்கம்","இன்றைய குறிப்பு","மருந்து நினைவூட்டல்கள்","மருத்துவ சந்திப்புகள்","ஒருங்கிணைந்த மருத்துவ பதிவுகள்","🔍 ஸ்கேன் & எடு (AI OCR)","✨ AI மூலம் விளக்கு","நீக்கு","புரிந்துகொள் · ஒழுங்குபடுத்து · நிர்வகி","புரிந்துகொள் · ஒழுங்குபடுத்து · உங்கள் ஆரோக்கிய பயணத்தை நிர்வகி","இன்றைய பதிவு","🩺 நோய் கண்டறிதல்","💊 மருந்துகள் (அனைத்து பதிவுகள்)","⚠️ அசாதாரண முடிவுகள்","📈 ஆய்வக போக்குகள்","🧭 ஆரோக்கிய காலவரிசை"],
+hi:["📊 डैशबोर्ड","✍️ दर्ज करें","🧬 प्रोफ़ाइल","📁 रिकॉर्ड","⏰ रिमाइंडर","🆔 ABHA","🤖 AI सहायक","लॉगिन","खाता बनाएं","लॉगआउट","यूज़रनेम","पासवर्ड","अलर्ट","AI स्वास्थ्य विश्लेषण","मेरे स्वास्थ्य का विश्लेषण करें","प्रोफ़ाइल और BMI","पिछले 7 दिन","सहेजें","लक्षण सहायक","साप्ताहिक सारांश","आज की सलाह","दवा रिमाइंडर","अपॉइंटमेंट","एकीकृत स्वास्थ्य रिकॉर्ड","🔍 स्कैन और निकालें (AI OCR)","✨ AI से समझें","हटाएं","समझें · व्यवस्थित करें · प्रबंधित करें","समझें · व्यवस्थित करें · अपनी स्वास्थ्य यात्रा प्रबंधित करें","आज का रिकॉर्ड","🩺 निदान और स्थितियां","💊 दवाइयां (सभी रिकॉर्ड)","⚠️ असामान्य निष्कर्ष","📈 लैब ट्रेंड","🧭 स्वास्थ्य टाइमलाइन"],
+te:["📊 డాష్‌బోర్డ్","✍️ నమోదు","🧬 ప్రొఫైల్","📁 రికార్డులు","⏰ రిమైండర్లు","🆔 ABHA","🤖 AI సహాయకుడు","లాగిన్","ఖాతా సృష్టించండి","లాగౌట్","యూజర్‌నేమ్","పాస్‌వర్డ్","హెచ్చరికలు","AI ఆరోగ్య విశ్లేషణ","నా ఆరోగ్యాన్ని విశ్లేషించు","ప్రొఫైల్ & BMI","గత 7 రోజులు","సేవ్ చేయి","లక్షణాల సహాయకుడు","వారపు సారాంశం","నేటి చిట్కా","మందుల రిమైండర్లు","అపాయింట్‌మెంట్లు","ఏకీకృత ఆరోగ్య రికార్డులు","🔍 స్కాన్ & సంగ్రహించు (AI OCR)","✨ AI తో వివరించు","తొలగించు","అర్థం చేసుకో · నిర్వహించు · పర్యవేక్షించు","అర్థం చేసుకో · నిర్వహించు · మీ ఆరోగ్య ప్రయాణాన్ని పర్యవేక్షించు","నేటి నమోదు","🩺 రోగ నిర్ధారణలు","💊 మందులు (అన్ని రికార్డులు)","⚠️ అసాధారణ ఫలితాలు","📈 ల్యాబ్ ట్రెండ్స్","🧭 ఆరోగ్య టైమ్‌లైన్"]};
+const orig=new WeakMap();
+function tr(){const m={"தமிழ்":"ta","हिन्दी":"hi","తెలుగు":"te"}[$("lang").value];const w=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT);let n;
+ while(n=w.nextNode()){if(n.parentNode.tagName==="SCRIPT")continue;let o=orig.get(n);if(o===undefined){if(!EN.includes(n.nodeValue.trim()))continue;o=n.nodeValue;orig.set(n,o)}
+  const t=o.trim(),v=o.replace(t,m?DT[m][EN.indexOf(t)]:t);if(n.nodeValue!==v)n.nodeValue=v}}
+$("lang").onchange=tr;let tt;new MutationObserver(()=>{clearTimeout(tt);tt=setTimeout(tr,40)}).observe(document.body,{childList:true,subtree:true});
+function toFHIR(){const sub={reference:"urn:uuid:p1"},a=S.abha||{},en=[],n=[0];
+ const add=(r,i)=>{r.id=i||"r"+(++n[0]);en.push({fullUrl:"urn:uuid:"+r.id,resource:r});return r.id};
+ add({resourceType:"Patient",identifier:a.no?[{system:"https://healthid.ndhm.gov.in",value:a.no}]:[],name:[{text:KEY.slice(3)}]},"p1");
+ S.recs.forEach(r=>{const x=r.x||{},ids=[];
+  (x.dx||[]).forEach(d=>ids.push(add({resourceType:"Condition",clinicalStatus:{text:"active"},code:{text:d},subject:sub,recordedDate:r.d})));
+  (x.meds||[]).forEach(m=>ids.push(add({resourceType:"MedicationRequest",status:"active",intent:"order",subject:sub,authoredOn:r.d,medicationCodeableConcept:{text:m.n},dosageInstruction:[{text:[m.dose,m.freq,m.dur].filter(Boolean).join(", ")}]})));
+  const ob=(x.tests||[]).map(t=>add({resourceType:"Observation",status:"final",category:[{text:"laboratory"}],code:{text:t.n},subject:sub,effectiveDateTime:r.d,valueQuantity:{value:t.v,unit:t.u||""},...(t.lo!=null?{referenceRange:[{low:{value:t.lo},high:{value:t.hi}}]}:{})}));
+  if(ob.length)ids.push(add({resourceType:"DiagnosticReport",status:"final",code:{text:r.title},subject:sub,effectiveDateTime:r.d,result:ob.map(o=>({reference:"urn:uuid:"+o}))}));
+  add({resourceType:"Composition",status:"final",type:{text:TY[r.t]},title:r.title,date:r.d,subject:sub,author:[{display:r.src||"Self"}],section:[{title:TY[r.t],entry:ids.map(i=>({reference:"urn:uuid:"+i}))}]})});
+ return{resourceType:"Bundle",type:"collection",meta:{tag:[{display:"ABDM-style FHIR R4 (mock)"}]},timestamp:new Date().toISOString(),entry:en}}
+function renderAbha(){const b=$("ab");b.innerHTML="";const a=S.abha;
+ if(a&&a.no){const c=el("div","","alert ok");c.append(el("b","✅ Linked (mock)"),el("div","ABHA no: "+a.no),el("div","ABHA address: "+a.addr));b.append(c);
+  const i=el("button","⬇️ Import records from ABDM (mock)","btn p");
+  i.onclick=()=>{if(S.abdm){i.textContent="Already imported ✓";return}S.abdm=1;S.recs.push({t:"lab",title:"Lipid profile (ABDM)",d:day(5),src:"ABDM · Apollo Diagnostics (mock)",txt:"Imported via ABDM consent (mock FHIR DiagnosticReport)",x:{dx:[],meds:[],tests:[{n:"Total cholesterol",v:214,u:"mg/dL",lo:0,hi:200},{n:"LDL",v:138,u:"mg/dL",lo:0,hi:100},{n:"HDL",v:46,u:"mg/dL",lo:40,hi:80}]}},{t:"rx",title:"Diabetes follow-up (ABDM)",d:day(2),src:"ABDM · City Hospital (mock)",txt:"Imported prescription (mock FHIR MedicationRequest)",x:{dx:["Prediabetes"],meds:[{n:"Metformin",dose:"500 mg",freq:"Twice daily",dur:"30 days"}],tests:[]}});save();renderRecs();i.textContent="Imported 2 records ✓"};
+  const u=el("button","Unlink","btn");u.onclick=()=>{delete S.abha;save();renderAbha()};
+  const r=el("div","","row");r.style.marginTop="8px";r.append(i,u);b.appendChild(r);return}
+ const inp=document.createElement("input");inp.placeholder="14-digit ABHA number (empty = mock)";inp.inputMode="numeric";inp.maxLength=17;
+ const otp=document.createElement("input");otp.placeholder="OTP (mock: any 6 digits)";otp.className="hid";
+ const msg=el("div","","mu"),g=el("button","Send OTP","btn p");g.style.marginTop="8px";let step=0;
+ g.onclick=()=>{if(!step){const d=inp.value.replace(/\D/g,"")||String(Math.floor(1e13+Math.random()*9e13));if(d.length!==14){msg.textContent="ABHA number must be 14 digits";return}inp.value=d.replace(/(\d\d)(\d{4})(\d{4})(\d{4})/,"$1-$2-$3-$4");otp.classList.remove("hid");msg.textContent="Mock OTP sent (ABDM sandbox simulated). Enter any 6 digits.";g.textContent="Verify & link";step=1}
+  else{if(!/^\d{6}$/.test(otp.value)){msg.textContent="Enter a 6 digit OTP";return}S.abha={no:inp.value,addr:KEY.slice(3)+"@abdm"};save();renderAbha()}};
+ b.append(el("label","ABHA number"),inp,otp,g,msg)}
+$("fprev").onclick=()=>{const bd=toFHIR();$("fj").textContent=JSON.stringify(bd,null,1).slice(0,6000);$("fc").textContent=bd.entry.length+" FHIR resources generated from your records"};
+$("fdl").onclick=async()=>{try{const d=await claude.use("downloads");if(!d)throw 0;await d.save({filename:"maruthuvam-fhir-bundle.json",data:JSON.stringify(toFHIR(),null,2)})}catch(e){$("fc").textContent="Download isn't available here. Use Preview and copy the JSON."}};
+const LC={English:"en-IN","தமிழ்":"ta-IN","हिन्दी":"hi-IN","తెలుగు":"te-IN"};
+const GR={English:"Welcome! How can I help you today? You can ask about symptoms, your reports, medicines, or reminders.","தமிழ்":"வணக்கம்! இன்று நான் உங்களுக்கு எப்படி உதவலாம்? அறிகுறிகள், மருத்துவ அறிக்கைகள், மருந்துகள் அல்லது நினைவூட்டல்கள் பற்றி கேளுங்கள்.","हिन्दी":"नमस्ते! आज मैं आपकी कैसे मदद कर सकता हूँ? आप लक्षण, रिपोर्ट, दवाइयों या रिमाइंडर के बारे में पूछ सकते हैं।","తెలుగు":"నమస్కారం! ఈ రోజు నేను మీకు ఎలా సహాయం చేయగలను? లక్షణాలు, రిపోర్టులు, మందులు లేదా రిమైండర్ల గురించి అడగవచ్చు."};
+const CH={English:["🤒 I have symptoms","📄 Explain my reports","💊 My medicines","⏰ Set reminders"],"தமிழ்":["🤒 அறிகுறிகள் உள்ளன","📄 என் அறிக்கைகளை விளக்கு","💊 என் மருந்துகள்","⏰ நினைவூட்டல்கள்"],"हिन्दी":["🤒 मुझे लक्षण हैं","📄 मेरी रिपोर्ट समझाएं","💊 मेरी दवाइयां","⏰ रिमाइंडर सेट करें"],"తెలుగు":["🤒 నాకు లక్షణాలున్నాయి","📄 నా రిపోర్టులు వివరించు","💊 నా మందులు","⏰ రిమైండర్లు"]};
+let VO=true,hist=[],AL="English",NM="";
+function speak(t,l){try{if(!VO||!window.speechSynthesis)return;speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t.replace(/[*#_]/g,"").slice(0,450));u.lang=LC[l||AL]||"en-IN";u.rate=.95;speechSynthesis.speak(u)}catch(e){}}
+function welcome(){$("lgh").textContent="🩺 Welcome to Maruthuvam.AI, "+NM+" 👋";$("lg").className="on";speak("Welcome to Maruthuvam.AI, "+NM,"English")}
+function amsg(t,c){const m=el("div",t,"m "+c);$("ac").appendChild(m);$("ac").scrollTop=1e5;return m}
+function openAsst(l){AL=l;hist=[];$("as").className="on";$("ac").innerHTML="";const g=GR[l].replace("!"," "+NM+"!");amsg(g,"a");speak(g,l);
+ $("ach").innerHTML="";CH[l].forEach(c=>{const b=el("button",c);b.onclick=()=>asend(c);$("ach").appendChild(b)})}
+async function asend(q){q=(q||$("aq").value).trim();if(!q)return;$("aq").value="";amsg(q,"u");const a=amsg("Thinking…","a");
+ const rec=S.recs.slice(-8).map(r=>r.d+" "+TY[r.t]+" "+r.title+": "+JSON.stringify(r.x||{}).slice(0,300)).join("\n");
+ try{const t=await aask("You are Maruthuvam.AI, a friendly voice assistant for a patient. Answer ANY question the patient asks correctly and helpfully (health, general knowledge, maths, daily life, anything). Use their records only when relevant. Be accurate; if you are unsure or the answer needs live information (news, prices, today's events), say so honestly instead of guessing. Medical questions: give clear useful information, never a diagnosis, and mention seeing a doctor for red-flag signs. "+ctx()+"\nRecords:\n"+rec+"\nMedicine reminders: "+S.meds.map(m=>m.n+" "+m.t).join(", ")+"\nConversation so far: "+hist.join(" | ")+"\nPatient says: "+q+"\nAnswer completely but concisely (about 2-6 spoken-style sentences), plain text, no markdown or lists. If the question is unclear, ask ONE short clarifying question.",r=>{a.textContent=r.text;$("ac").scrollTop=1e5});a.textContent=t;hist.push("P: "+q,"A: "+t.slice(0,150));hist=hist.slice(-6);speak(t)}catch(e){a.textContent=e.message||"Try again."}}
+$("asd").onclick=()=>asend();$("aq").onkeydown=e=>{if(e.key==="Enter")asend()};
+$("asx").onclick=()=>{$("as").className="";try{speechSynthesis.cancel()}catch(e){}};$("alu").onclick=()=>{$("as").className="on"};
+$("asv").onclick=()=>{VO=!VO;$("asv").textContent=VO?"🔊":"🔇";if(!VO)try{speechSynthesis.cancel()}catch(e){}};
+const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+async function aask(p,onT){if(!sample)throw{message:"AI isn't available here. Open this page in claude.ai."};return (await sample(p+"\nReply in "+L()+".",{cache:false,onText:onT})).text}
+let rec=null,listening=false;const note=t=>{amsg(t,"a")};
+if(!SR)$("amic").onclick=()=>note("🎤 Voice input isn't supported in this browser. Use Chrome or Edge, or tap the mic key on your keyboard to dictate.");
+else $("amic").onclick=async()=>{
+ if(listening&&rec){rec.stop();return}
+ const pp=document.permissionsPolicy||document.featurePolicy;
+ if(pp&&pp.allowsFeature&&!pp.allowsFeature("microphone")){note("🎤 The microphone is blocked inside this preview frame. Tap the mic key on your phone or laptop keyboard to dictate, or open the page in a full browser tab.");return}
+ try{const st=await navigator.mediaDevices.getUserMedia({audio:true});st.getTracks().forEach(t=>t.stop())}catch(e){note("🎤 Microphone permission was denied. Allow the mic in your browser's site settings and try again.");return}
+ try{speechSynthesis.cancel()}catch(e){}
+ rec=new SR();rec.lang=LC[AL]||"en-IN";rec.interimResults=true;rec.maxAlternatives=1;
+ rec.onstart=()=>{listening=true;$("amic").textContent="⏹️";$("aq").placeholder="Listening…"};
+ rec.onresult=e=>{let t="";for(const x of e.results)t+=x[0].transcript;$("aq").value=t};
+ rec.onerror=e=>{const m={"not-allowed":"Microphone is blocked here.","service-not-allowed":"Speech service is blocked here.","no-speech":"I didn't hear anything. Try again.","audio-capture":"No microphone found.","network":"Speech service needs internet."}[e.error]||"Voice input failed ("+e.error+").";note("🎤 "+m)};
+ rec.onend=()=>{listening=false;$("amic").textContent="🎤";$("aq").placeholder="Type or speak…";if($("aq").value.trim())asend()};
+ try{rec.start()}catch(e){note("🎤 Couldn't start the mic.")}};
+document.querySelectorAll("#lg button").forEach(b=>b.onclick=()=>{const l=b.dataset.l;$("lang").value=l;tr();$("lg").className="";tab("dash");openAsst(l)});
+document.querySelectorAll(".qa button").forEach(b=>b.onclick=()=>tab(b.dataset.g));
+let LOC=null;
+const MQ=q=>LOC?"https://www.google.com/maps/search/"+encodeURIComponent(q)+"/@"+LOC.la+","+LOC.lo+",14z":"https://www.google.com/maps/search/"+encodeURIComponent(q+" near me");
+function lk(t,u,c){const a=document.createElement("a");a.textContent=t;a.href=u;a.target="_blank";a.rel="noopener noreferrer";a.className=c||"btn";a.style.textDecoration="none";a.style.display="inline-block";a.style.textAlign="center";return a}
+function renderNear(){const g=$("nq");g.innerHTML="";
+ [["🏥 Hospitals","hospital"],["🩺 Clinics","clinic"],["💊 Medical shops / Pharmacy","pharmacy"],["🕐 24-hour pharmacy","24 hour pharmacy"],["🏷️ Jan Aushadhi (low-cost generics)","Jan Aushadhi Kendra"],["🧪 Diagnostic labs","diagnostic lab"],["🩸 Blood banks","blood bank"]].forEach(([t,q])=>g.appendChild(lk(t,MQ(q))));
+ g.appendChild(lk("🚑 Ambulance 108","tel:108","btn p"));g.appendChild(lk("📞 Emergency 112","tel:112","btn p"));
+ const sp=$("nsp");sp.innerHTML="";["General physician","Pediatrician","Dermatologist","ENT","Dentist","Eye specialist","Orthopedic","Gynecologist","Cardiologist","Diabetologist"].forEach(s=>sp.appendChild(lk(s,MQ(s+" clinic"))));
+renderMedLinks();renderCat();renderCart();renderOrders()}
+function renderMedLinks(){const m=$("nm");m.innerHTML="";
+ const set=new Set(S.meds.map(x=>x.n));S.recs.forEach(r=>((r.x&&r.x.meds)||[]).forEach(x=>set.add(x.n)));
+ if($("nmi").value.trim())set.add($("nmi").value.trim());
+ if(!set.size){m.appendChild(el("div","Type a medicine name above, or add reminders / scan a prescription.","mu"));return}
+ [...set].forEach(n=>{const c=el("div","","card");c.style.marginTop="8px";c.appendChild(el("b","💊 "+n));const r=el("div","","row");r.style.flexWrap="wrap";r.style.marginTop="6px";const q=encodeURIComponent(n);
+  const ab=el("button","🛒 Add to cart","btn p");ab.onclick=()=>addCart(n);r.append(ab,lk("📍 Nearby pharmacies",MQ("pharmacy "+n)),lk("1mg","https://www.1mg.com/search/all?name="+q),lk("PharmEasy","https://pharmeasy.in/search/all?name="+q),lk("Netmeds","https://www.netmeds.com/catalogsearch/result?q="+q),lk("Apollo","https://www.apollopharmacy.in/search-medicines/"+q));c.appendChild(r);m.appendChild(c)})}
+$("nloc").onclick=()=>{const st=$("nls");if(!navigator.geolocation){st.textContent="Location isn't supported here. The buttons below still open Google Maps near you.";return}
+ st.textContent="Getting your location…";navigator.geolocation.getCurrentPosition(p=>{LOC={la:p.coords.latitude.toFixed(5),lo:p.coords.longitude.toFixed(5)};st.textContent="📍 Location set. Searches now use your exact position (not saved anywhere).";renderNear();loadPlaces()},e=>{st.textContent="Couldn't read location ("+(e.code===1?"permission blocked":"unavailable")+"). No problem: the buttons below open Google Maps and use your phone's own location."},{enableHighAccuracy:true,timeout:10000})};
+$("nmb").onclick=renderMedLinks;$("nmi").onkeydown=e=>{if(e.key==="Enter")renderMedLinks()};
+let PL=[],PT="pharmacy",STORE=null,CART=[];
+const CATS=[["pharmacy","💊 Medical shops",'["amenity"="pharmacy"]'],["hospital","🏥 Hospitals",'["amenity"="hospital"]'],["clinic","🩺 Clinics",'["amenity"~"^(clinic|doctors)$"]'],["jan","🏷️ Jan Aushadhi",'["name"~"Jan Aushadhi",i]'],["lab","🧪 Labs",'["healthcare"="laboratory"]']];
+const hv=(a,b,c,d)=>{const r=x=>x*Math.PI/180,h=Math.sin(r(c-a)/2)**2+Math.cos(r(a))*Math.cos(r(c))*Math.sin(r(d-b)/2)**2;return 12742*Math.asin(Math.sqrt(h))};
+async function ovp(q){for(const u of["https://overpass-api.de/api/interpreter","https://overpass.kumi.systems/api/interpreter"]){try{const r=await fetch(u,{method:"POST",body:"data="+encodeURIComponent(q)});if(r.ok)return(await r.json()).elements||[]}catch(e){}}throw 0}
+function renderCat(){const c=$("lc");c.innerHTML="";CATS.forEach(([k,t])=>{const b=el("button",t,k===PT?"btn p":"btn");b.onclick=()=>{PT=k;renderCat();loadPlaces()};c.appendChild(b)})}
+async function loadPlaces(){const out=$("ll");if(!LOC){out.textContent="Tap “Use my location” to see live results.";return}
+ const f=CATS.find(c=>c[0]===PT)[2];out.textContent="🔎 Searching around you…";
+ try{let els=[];for(const R of[3000,8000,15000]){els=await ovp("[out:json][timeout:25];nwr"+f+"(around:"+R+","+LOC.la+","+LOC.lo+");out center 60;");if(els.length>=3)break}
+  PL=els.map(e=>{const t=e.tags||{},la=e.lat||(e.center&&e.center.lat),lo=e.lon||(e.center&&e.center.lon);return{n:t.name||t["name:en"]||"Unnamed place",la,lo,d:hv(+LOC.la,+LOC.lo,la,lo),ph:t.phone||t["contact:phone"]||"",oh:t.opening_hours||"",ad:[t["addr:housenumber"],t["addr:street"],t["addr:suburb"],t["addr:city"]].filter(Boolean).join(", ")}}).filter(p=>p.la).sort((a,b)=>a.d-b.d).slice(0,15);
+  showPlaces()}catch(e){out.textContent="Live data isn't reachable right now (internet needed). Use the Google Maps buttons below instead."}}
+function showPlaces(){const out=$("ll");out.innerHTML="";if(!PL.length){out.appendChild(el("div","Nothing found nearby in OpenStreetMap. Try the Google Maps buttons below.","mu"));return}
+ PL.forEach(p=>{const c=el("div","","card");c.style.margin="8px 0";c.appendChild(el("b",p.n+" · "+p.d.toFixed(1)+" km"));if(p.ad)c.appendChild(el("div","📍 "+p.ad,"mu"));if(p.oh)c.appendChild(el("div","🕐 "+p.oh,"mu"));
+  const r=el("div","","row");r.style.cssText="flex-wrap:wrap;margin-top:6px";r.appendChild(lk("🧭 Directions","https://www.google.com/maps/dir/?api=1&destination="+p.la+","+p.lo));
+  if(p.ph)r.appendChild(lk("📞 Call","tel:"+p.ph.split(";")[0].replace(/[^+\d]/g,"")));
+  if(PT==="pharmacy"||PT==="jan"){const b=el("button",STORE===p?"✅ Selected store":"🛒 Order from here",STORE===p?"btn":"btn p");b.onclick=()=>{STORE=p;showPlaces();renderCart()};r.appendChild(b)}
+  c.appendChild(r);out.appendChild(c)})}
+function addCart(n){const c=CART.find(x=>x.n===n);c?c.q++:CART.push({n,q:1});renderCart()}
+function renderCart(){const b=$("cart");b.innerHTML="";$("co").className=CART.length?"":"hid";
+ if(!CART.length){b.appendChild(el("div","Cart is empty. Tap “Add to cart” on a medicine below.","mu"));return}
+ CART.forEach((c,i)=>{const r=el("div","","row");r.style.alignItems="center";const t=el("span","💊 "+c.n);t.style.flex="1";const m=el("button","−","btn"),pl=el("button","+","btn"),q=el("b",String(c.q)),x=el("button","✕","x");
+  m.onclick=()=>{c.q>1?c.q--:CART.splice(i,1);renderCart()};pl.onclick=()=>{c.q++;renderCart()};x.onclick=()=>{CART.splice(i,1);renderCart()};r.append(t,m,q,pl,x);b.appendChild(r)});
+ $("cst").textContent=STORE?"🏪 Store: "+STORE.n+" ("+STORE.d.toFixed(1)+" km away)":"🏪 Pick a pharmacy from the live list above (🛒 Order from here)."}
+$("cgo").onclick=()=>{const m=$("cmsg");if(!STORE){m.textContent="Select a pharmacy first.";return}if(!$("crx").checked){m.textContent="Please confirm you have a valid prescription.";return}
+ const home=$("cmode").value==="Home delivery";if(home&&!$("cad").value.trim()){m.textContent="Enter your delivery address.";return}
+ S.orders=S.orders||[];S.orders.unshift({id:"MA"+String(Date.now()).slice(-6),items:CART.map(c=>c.n+" ×"+c.q),store:STORE.n,mode:$("cmode").value,pay:$("cpay").value,t:Date.now()});save();CART=[];$("crx").checked=false;m.textContent="";renderCart();renderOrders()};
+function ostat(o){const s=(Date.now()-o.t)/1000,h=o.mode==="Home delivery";return s<15?"📝 Order placed":s<40?"🏪 Store confirmed":s<70?"📦 Packed":s<110?(h?"🛵 Out for delivery":"🏬 Ready for pickup"):(h?"✅ Delivered":"✅ Picked up")}
+function renderOrders(){const b=$("ords");b.innerHTML="";const L=S.orders||[];if(!L.length){b.appendChild(el("div","No orders yet.","mu"));return}
+ L.forEach(o=>{const c=el("div","","card");c.style.margin="6px 0";c.appendChild(el("b","#"+o.id+" · "+ostat(o)));c.appendChild(el("div",o.items.join(", "),"mu"));c.appendChild(el("div","🏪 "+o.store+" · "+o.mode+" · "+o.pay,"mu"));b.appendChild(c)})}
+setInterval(()=>{if(!$("p-near").classList.contains("hid"))renderOrders()},5000);
+const TR=[
+["❤️ Heart & breathing","Chest pain, pressure or tightness",2,"Stop all activity and sit down. Don't walk or drive yourself. Loosen tight clothes.",/chest\W*(pain|pressure|tight)|nenju\s*vali|நெஞ்சு\s*வலி/i],
+["❤️ Heart & breathing","Severe trouble breathing, can't speak full sentences",2,"Sit upright and loosen clothing. Use a prescribed inhaler if there is one.",/(difficulty|trouble|hard|can'?t|cannot|short(ness)?( of)?)\W*(to\s*)?breath|breathless|moochu\s*(thinaral|vaanga|vara)|மூச்சு\s*(திணறல்|விட)/i],
+["❤️ Heart & breathing","Blue or grey lips or face",2,"Treat as an emergency. Sit upright and call now.",/blue\s*lips|lips.*blue/i],
+["❤️ Heart & breathing","Wheezing or breathlessness on mild effort",1,"Rest, sit upright, use your prescribed inhaler if you have one, and get checked today.",/wheez|asthma/i],
+["❤️ Heart & breathing","Racing heartbeat or palpitations at rest",1,"Sit and rest. Get an ECG and doctor check today.",/palpitation|racing heart/i],
+["🧠 Brain & nerves","Fainting, collapsed or not responding",2,"Lay the person on their back, check breathing, give no food or water. If not breathing normally, start CPR if trained.",/faint|unconscious|collapsed|not responding|mayakkam|மயக்கம்/i],
+["🧠 Brain & nerves","Face drooping, arm weakness or slurred speech (stroke signs)",2,"Note the time symptoms began and tell the doctors. Give no food, water or medicines.",/face.*(droop|weak)|slurred|can'?t move (arm|leg)|paralysis|வாய்\s*கோணல்/i],
+["🧠 Brain & nerves","Seizure or fits",2,"Lay them on their side, clear hard objects, put nothing in the mouth, and note how long it lasts.",/seizure|convulsion|\bfits?\b|valippu|வலிப்பு/i],
+["🧠 Brain & nerves","Sudden worst-ever headache, or headache after a head injury",2,"Keep them lying still. Don't give painkillers. Go to a hospital.",/worst headache|thunderclap|head injury|hit (my|his|her) head/i],
+["🧠 Brain & nerves","New confusion or sudden loss of vision",2,"Don't leave them alone. Go to a hospital now.",/confus|sudden(ly)?\s*(blind|vision)/i],
+["🧠 Brain & nerves","Thoughts of self-harm or suicide",2,"You are not alone. Stay with someone, keep away from anything you could use to hurt yourself, and call Tele-MANAS 14416 or 112 now.",/suicid|kill myself|end my life|self[- ]harm|want to die|thatkolai|தற்கொலை/i],
+["🩸 Bleeding & injury","Heavy bleeding that won't stop",2,"Press firmly with a clean cloth and keep pressing. Add more cloth on top, don't remove it. Raise the limb.",/bleeding.*(won'?t|not) stop|heavy bleeding/i],
+["🩸 Bleeding & injury","Severe burn, or burn on face or a large area",2,"Cool under clean running water for 20 minutes. No toothpaste, oil or ice. Cover loosely.",/severe burn|burns? (on|over) (face|large)/i],
+["🩸 Bleeding & injury","Poisoning, overdose or snake bite",2,"Don't make them vomit. Keep the container, or remember how the snake looked (don't chase it). Keep a bitten limb still. Poison helpline: 1800-116-117.",/poison|overdose|snake\s*bite|paambu|பாம்பு|swallowed/i],
+["🩸 Bleeding & injury","Severe allergic reaction: swollen face or throat, hives with breathing trouble",2,"Use a prescribed adrenaline (epinephrine) auto-injector if available. Lie flat with legs raised unless breathing is hard.",/anaphyla|throat (swell|closing)|face swell|swollen (lips|tongue)/i],
+["🩸 Bleeding & injury","Deep cut, suspected fracture or cannot bear weight",1,"Keep the injured part still and supported. It may need stitches or an X-ray today.",/fracture|broken|deep cut|stitch/i],
+["🩸 Bleeding & injury","Dog or animal bite",1,"Wash the wound with soap and running water for 15 minutes. Get the anti-rabies vaccine and doctor check today.",/dog bite|animal bite|naai\s*kadi/i],
+["🩸 Bleeding & injury","Eye injury or sudden eye pain",1,"Don't rub or press the eye. Cover loosely and get an eye check today.",/eye injury|eye pain/i],
+["🤢 Stomach & others","Vomiting blood or black tarry stools",2,"Don't eat or drink. Lie on your side. Go to a hospital immediately.",/vomit(ing)?\s*blood|black\s*(tarry\s*)?stool|blood in vomit/i],
+["🤢 Stomach & others","Pregnant with heavy bleeding, severe pain or reduced baby movement",2,"Call 108 or 102 and go to the nearest hospital with a maternity unit.",/pregnan.*(bleed|pain)|reduced (baby|fetal) movement/i],
+["🤢 Stomach & others","Severe stomach pain",1,"Don't take painkillers on your own. See a doctor today. Go to emergency if pain is sudden, very hard, or with fever or vomiting.",/severe (stomach|abdom\w*)\s*pain|vayiru\s*vali\s*(romba|athigam)/i],
+["🤢 Stomach & others","Vomiting or loose motions with dehydration (very dry mouth, little urine, dizziness)",1,"Sip ORS in small, frequent amounts. If you can't keep fluids down, go today.",/dehydrat|loose motion.*(urine|dizzy)/i],
+["🤢 Stomach & others","Vomiting for more than a day",1,"Sip ORS slowly and get checked today.",/vomit.*(day|days)/i],
+["🤢 Stomach & others","Painful urination with fever or back pain",1,"Drink water and see a doctor today. A urine test may be needed.",/burning urine|painful urination/i],
+["🤢 Stomach & others","Acidity, gas or mild stomach upset",0,"Eat light, avoid spicy and oily food, and drink water.",/acidity|\bgas\b|indigestion/i],
+["🌡️ Fever & infection","Fever with stiff neck, non-fading rash or unusual drowsiness",2,"This can be a serious infection. Go to a hospital now.",/stiff neck|neck stiff/i],
+["🌡️ Fever & infection","Fever in a baby under 3 months, or baby not feeding / very sleepy",2,"Don't give medicines on your own. Go to a hospital now.",/baby.*(fever|not feeding)|infant.*fever/i],
+["🌡️ Fever & infection","High fever (above 102°F / 39°C) or fever for more than 3 days",1,"Rest and drink plenty of fluids. See a doctor today. Tests for dengue, typhoid or malaria may be needed.",/high fever|fever.*(3|three|4|5) days|fever.*more than/i],
+["🌡️ Fever & infection","Mild fever (below 101°F) for less than 2 days",0,"Rest, fluids and light food. Watch the temperature. See a doctor if it rises or lasts.",/mild fever|kaichal|காய்ச்சல்|\bfever\b/i],
+["🌡️ Fever & infection","Mild cough, cold or sore throat",0,"Warm fluids, steam and rest. See a doctor if it lasts more than 3 days.",/cough|\bcold\b|sore throat|irumal|சளி|இருமல்/i],
+["🙂 Common & mild","Mild headache or body ache",0,"Rest, drink water and sleep well. See a doctor if it keeps coming back.",/headache|body ache|thalai\s*vali|தலைவலி/i],
+["🙂 Common & mild","Mild skin rash or itching",0,"Keep the area clean and dry, and avoid scratching. See a doctor if it spreads or swells.",/rash|itch/i],
+["🙂 Common & mild","Tiredness or trouble sleeping",0,"Regular sleep time, water and light activity help. See a doctor if it lasts weeks.",/tired|fatigue|can'?t sleep/i]
+];
+const TL=[["🟢 ROUTINE CARE","#15803d","#dcfce7"],["🟠 URGENT CONSULTATION","#b45309","#fef3c7"],["🔴 EMERGENCY","#b91c1c","#fee2e2"]];
+function renderTri(){const c=$("tc");c.innerHTML="";[["🆘 112 All emergencies","tel:112"],["🚑 108 Ambulance","tel:108"],["🤰 102 Mother & child","tel:102"],["🩺 104 Health helpline","tel:104"],["🧠 14416 Tele-MANAS","tel:14416"],["☠️ Poison 1800-116-117","tel:1800116117"],["👮 100 Police","tel:100"],["🔥 101 Fire","tel:101"]].forEach(([t,u],i)=>c.appendChild(lk(t,u,i<2?"btn p":"btn")));
+ const f=$("tf");if(!f.children.length){let last="";TR.forEach((x,i)=>{if(x[0]!==last){last=x[0];const h=el("div",last,"mu");h.style.cssText="font-weight:600;margin:10px 0 4px";f.appendChild(h)}const l=document.createElement("label");l.style.cssText="display:block;padding:3px 0;font-size:14px";const k=document.createElement("input");k.type="checkbox";k.value=i;l.append(k," "+x[1]);f.appendChild(l)})}
+ const g=$("tg");g.innerHTML="";g.appendChild(lk("🗺️ Emergency hospitals on Google Maps",MQ("emergency hospital 24 hours")))}
+function analyzeTri(){const r=$("tres");r.innerHTML="";r.classList.remove("hid");const tx=$("tt").value,hits=new Map();
+ document.querySelectorAll("#tf input:checked").forEach(k=>hits.set(+k.value,false));TR.forEach((x,i)=>{if(!hits.has(i)&&tx&&x[4].test(tx))hits.set(i,true)});
+ if(!hits.size&&!tx.trim()){r.appendChild(el("div","Tick at least one symptom or describe how you feel.","mu"));return}
+ let lv=hits.size?Math.max(...[...hits.keys()].map(i=>TR[i][2])):0;const why=[];
+ if($("tsv").value==="severe"&&lv<1){lv=1;why.push("You marked it severe or unbearable.")}
+ if($("twr").checked&&lv<1){lv=1;why.push("Symptoms are getting worse quickly.")}
+ if(!hits.size)why.push("We couldn't recognise your words. If you feel something is seriously wrong, trust that feeling and get checked.");
+ const T=TL[lv],b=el("div",T[0]);b.style.cssText="background:"+T[2]+";color:"+T[1]+";padding:14px;border-radius:12px;font-weight:700;font-size:18px";r.appendChild(b);
+ const m=el("div",["Home care is usually enough. See a doctor if it isn't better in 2 to 3 days, or sooner if it gets worse.","See a doctor today, within 24 hours. If it gets worse, treat it as an emergency and call 108.","Call 108 or 112 NOW. Don't wait to see if it improves. Don't drive yourself. Stay with the person."][lv]);m.style.cssText="margin:10px 0;font-weight:600";r.appendChild(m);
+ const row=el("div","","row");row.style.flexWrap="wrap";
+ if(lv===2){row.append(lk("📞 Call 108 now","tel:108","btn p"),lk("🆘 Call 112","tel:112","btn p"))}
+ if(lv>=1)row.append(lk("🗺️ Hospitals near me",MQ("emergency hospital 24 hours")));
+ if(lv===1)row.append(lk("🩺 Clinics near me",MQ("clinic")));
+ if(row.children.length)r.appendChild(row);
+ why.forEach(w=>r.appendChild(el("div","• "+w,"mu")));
+ [...hits.keys()].filter(i=>TR[i][2]===lv).forEach(i=>{const d=el("div","");d.style.marginTop="8px";d.appendChild(el("b","• "+TR[i][1]+(hits.get(i)?" (from your text)":"")));d.appendChild(el("div",TR[i][3],"mu"));r.appendChild(d)});
+ const dn=el("div","This is safety guidance, not a diagnosis. It cannot replace a doctor. When unsure, choose the safer option and get help.","mu");dn.style.marginTop="12px";r.appendChild(dn);
+ r.scrollIntoView({behavior:"smooth",block:"start"});if(lv===2&&LOC)emHosp()}
+async function emHosp(){const o=$("tl");if(!LOC){o.textContent="Tap “Use my location” first.";return}o.textContent="🔎 Searching hospitals near you…";
+ try{let els=[];for(const R of[5000,15000,30000]){els=await ovp("[out:json][timeout:25];nwr[\"amenity\"=\"hospital\"](around:"+R+","+LOC.la+","+LOC.lo+");out center 60;");if(els.length>=3)break}
+  const L=els.map(e=>{const t=e.tags||{},la=e.lat||(e.center&&e.center.lat),lo=e.lon||(e.center&&e.center.lon);return{n:t.name||t["name:en"]||"Unnamed hospital",la,lo,d:hv(+LOC.la,+LOC.lo,la,lo),ph:t.phone||t["contact:phone"]||"",em:t.emergency==="yes",oh:t.opening_hours||""}}).filter(p=>p.la).sort((a,b)=>a.d-b.d).slice(0,6);
+  o.innerHTML="";if(!L.length){o.textContent="Nothing found in OpenStreetMap nearby. Use the Google Maps button.";return}
+  L.forEach(p=>{const c=el("div","","card");c.style.margin="8px 0";c.appendChild(el("b",p.n+" · "+p.d.toFixed(1)+" km"+(p.em?" · 🚨 Emergency dept":"")));if(p.oh)c.appendChild(el("div","🕐 "+p.oh,"mu"));const r=el("div","","row");r.style.cssText="flex-wrap:wrap;margin-top:6px";r.appendChild(lk("🧭 Directions","https://www.google.com/maps/dir/?api=1&destination="+p.la+","+p.lo,"btn p"));if(p.ph)r.appendChild(lk("📞 Call","tel:"+p.ph.split(";")[0].replace(/[^+\d]/g,"")));c.appendChild(r);o.appendChild(c)});
+  o.appendChild(el("div","Call ahead if you can, but don't delay leaving in an emergency. OpenStreetMap may miss some hospitals.","mu"))}catch(e){o.textContent="Live data isn't reachable (internet needed). Use the Google Maps button."}}
+$("tgo").onclick=analyzeTri;
+$("tloc").onclick=()=>{const st=$("tls");if(!navigator.geolocation){st.textContent="Location isn't supported here. Use the Google Maps button.";return}st.textContent="Getting your location…";navigator.geolocation.getCurrentPosition(p=>{LOC={la:p.coords.latitude.toFixed(5),lo:p.coords.longitude.toFixed(5)};st.textContent="📍 Location set (not saved anywhere).";renderTri();emHosp()},e=>{st.textContent="Couldn't read location. The Google Maps button uses your phone's own location."},{enableHighAccuracy:true,timeout:10000})};
+let sample=null;
+(async()=>{try{sample=await claude.use("sample")}catch(e){}})();
+const ctx=()=>"User name: "+NM+". User: age "+S.p.age+", BMI "+(S.p.wt/Math.pow(S.p.ht/100,2)).toFixed(1)+". Last 7 days (date,water glasses,sleep hrs,steps,mood1-5): "+S.logs.slice(-7).map(l=>[l.d,l.water,l.sleep,l.steps,l.mood].join(",")).join(" | ");
+const L=()=>({English:"English","தமிழ்":"Tamil script","Tanglish":"Tanglish (Tamil in English letters)","हिन्दी":"Hindi (Devanagari script)","తెలుగు":"Telugu script"}[$("lang").value]||"English");
+async function ask(p,onT){if(!sample)throw{message:"AI isn't available here. Open this page in claude.ai."};return (await sample(p+"\nReply in "+L()+". Short, friendly, no diagnosis.",{cache:false,onText:onT})).text}
+async function go(btn,out,p){btn.disabled=true;out.textContent="Thinking…";try{out.textContent=await ask(p,r=>out.textContent=r.text)}catch(e){out.textContent=e.message||"Try again later."}btn.disabled=false}
+$("wkb").onclick=()=>go($("wkb"),$("wk"),"You are a wellness coach. "+ctx()+"\nGive a 4-line weekly summary: 1 win, 1 concern, 1 action.");
+$("tipb").onclick=()=>go($("tipb"),$("tip"),"You are a wellness coach. "+ctx()+"\nGive ONE practical health tip for today in 2 lines.");
+let SC=null;
+$("scb").onclick=async()=>{const fs=[...$("scf").files],st=$("scs"),res=$("scr");res.innerHTML="";
+ if(!fs.length){st.textContent="Choose an image first.";return}
+ if(!sample){st.textContent="AI isn't available here. Open this page in claude.ai.";return}
+ st.textContent="Reading document (OCR)…";$("scb").disabled=true;
+ try{const lim=await sample.limits();if(!lim.images)throw {message:"Image reading isn't enabled for this view."};
+  const o=await sample('You are a medical record OCR and extraction engine. Read the attached document image(s) and return ONLY JSON, no markdown: {"type":"rx|lab|dc|dx","title":"","date":"YYYY-MM-DD or empty","source":"doctor/hospital/lab","diagnoses":[""],"medicines":[{"name":"","dosage":"","frequency":"","duration":""}],"tests":[{"name":"","value":"","unit":"","range":"","flag":"normal|high|low"}],"notes":""}. type: rx=prescription, lab=lab report, dc=discharge summary, dx=diagnostic/imaging. Use empty arrays when absent. Never invent values.',{images:fs,cache:false});
+  SC=JSON.parse(o.text.replace(/```json|```/g,"").trim());showSC()}catch(e){st.textContent=(e&&e.message)||"Couldn't read the file. Try a clearer photo."}
+ $("scb").disabled=false};
+function showSC(){const r=SC,res=$("scr");res.innerHTML="";$("scs").textContent="Extracted ✓ Review before saving.";
+ const sec=(t,rows)=>{const d=el("div","","card");d.style.marginTop="10px";d.appendChild(el("h3",t));rows.forEach(x=>{const p=el("div",x[0],x[1]||"");p.style.margin="3px 0";d.appendChild(p)});return d};
+ const ty=TY[r.type]?r.type:"dx";
+ res.appendChild(el("div",TY[ty]+" · "+(r.title||"Untitled")+" · "+(r.date||"no date")+(r.source?" · "+r.source:""),"alert ok"));
+ if((r.diagnoses||[]).length)res.appendChild(sec("🩺 Diagnoses",r.diagnoses.map(x=>["• "+x])));
+ if((r.medicines||[]).length)res.appendChild(sec("💊 Medicines & dosage",r.medicines.map(m=>["• "+m.name+" — "+[m.dosage,m.frequency,m.duration].filter(Boolean).join(" · ")])));
+ if((r.tests||[]).length)res.appendChild(sec("🧪 Test values",r.tests.map(t=>["• "+t.name+": "+t.value+" "+(t.unit||"")+(t.range?" (ref "+t.range+")":"")+(t.flag&&t.flag!=="normal"?" ⚠ "+t.flag.toUpperCase():""),t.flag&&t.flag!=="normal"?"alert":""])));
+ const row=el("div","","row");row.style.marginTop="10px";
+ const sv=el("button","💾 Save to records","btn p");sv.onclick=()=>{
+  const fm=[(r.diagnoses||[]).length?"Diagnoses: "+r.diagnoses.join(", "):"",...(r.medicines||[]).map(m=>"💊 "+m.name+" — "+[m.dosage,m.frequency,m.duration].filter(Boolean).join(" · ")),...(r.tests||[]).map(t=>"🧪 "+t.name+": "+t.value+" "+(t.unit||"")+(t.range?" (ref "+t.range+")":"")+(t.flag&&t.flag!=="normal"?" ⚠ "+t.flag.toUpperCase():"")),r.notes||""].filter(Boolean).join("\n");
+  S.recs.push({t:ty,title:r.title||"Scanned record",d:/^\d{4}-\d\d-\d\d$/.test(r.date)?r.date:day(0),src:r.source||"",txt:fm,f:"scan"});save();renderRecs();res.innerHTML="";$("scs").textContent="Saved to your records ✓";$("scf").value=""};
+ const mr=el("button","➕ Medicines → reminders","btn");mr.onclick=()=>{(r.medicines||[]).forEach(m=>S.meds.push({n:m.name+(m.dosage?" "+m.dosage:""),t:"09:00"}));save();render();mr.textContent="Added ✓"};
+ row.append(sv,mr);res.appendChild(row)}
+$("insb").onclick=()=>go($("insb"),$("ins"),"You are a personal health copilot. "+ctx()+"\nMedical records:\n"+S.recs.map(r=>TY[r.t]+" | "+r.d+" | "+r.title+" | "+(r.txt||"").slice(0,400)).join("\n")+"\nMedicines on reminders: "+S.meds.map(m=>m.n).join(", ")+"\nCross-analyse the records AND the wellness data. Output 3 short sections: UNDERSTAND (key findings), ORGANIZE (what is missing or needs follow-up), MANAGE (3 actions for this week). No diagnosis.");
+$("send").onclick=async()=>{const q=$("q").value.trim();if(!q)return;$("q").value="";
+ const c=$("chat");c.appendChild(el("div",q,"m u"));const a=el("div","Thinking…","m a");c.appendChild(a);c.scrollTop=c.scrollHeight;
+ try{a.textContent=await ask("You are a careful health assistant (NOT a doctor). Symptom: "+q+"\n"+ctx()+"\nGive likely general causes, simple self-care, and clear red-flag signs when to see a doctor.",r=>{a.textContent=r.text;c.scrollTop=c.scrollHeight})}catch(e){a.textContent=e.message||"Try again."}};
+$("q").onkeydown=e=>{if(e.key==="Enter")$("send").click()};
+const hash=async s=>{try{const b=await crypto.subtle.digest("SHA-256",new TextEncoder().encode(s));return [...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,"0")).join("")}catch(e){return s}};
+let mode="in",mem={};
+const getU=()=>{try{return JSON.parse(localStorage.getItem("vpu")||"{}")}catch(e){return mem}};
+const setU=o=>{mem=o;try{localStorage.setItem("vpu",JSON.stringify(o))}catch(e){}};
+function intro(){const i=$("intro");i.className="on";setTimeout(()=>{i.classList.add("off");setTimeout(()=>{i.className="";welcome()},450)},3000)}
+function enter(u,a){if(a)intro();load(u);NM=u.charAt(0).toUpperCase()+u.slice(1);document.body.classList.add("in");$("hi").textContent="👤 "+NM;$("gh").textContent="👋 Hello, "+NM+"!";tab("dash");render();try{localStorage.setItem("vps",u)}catch(e){}}
+const err=m=>{$("le").textContent=m;$("le").classList.remove("hid")};
+$("sw").onclick=()=>{mode=mode==="in"?"up":"in";$("go").textContent=mode==="in"?"Login":"Create account";$("sw").textContent=mode==="in"?"Create account":"Login";$("swt").textContent=mode==="in"?"New here?":"Already have an account?";$("le").classList.add("hid")};
+$("go").onclick=async()=>{const u=$("lu").value.trim().toLowerCase(),p=$("lp").value;
+ if(u.length<3)return err("Username min 3 characters");if(p.length<4)return err("Password min 4 characters");
+ const U=getU(),h=await hash(p);
+ if(mode==="up"){if(U[u])return err("Username already taken");U[u]=h;setU(U);enter(u,1)}
+ else{if(!U[u]||U[u]!==h)return err("Wrong username or password");enter(u,1)}
+ $("lp").value=""};
+$("lp").onkeydown=e=>{if(e.key==="Enter")$("go").click()};
+$("out").onclick=()=>{try{localStorage.removeItem("vps")}catch(e){}document.body.classList.remove("in");$("lu").value="";$("lp").value=""};
+let ss=null;try{ss=localStorage.getItem("vps")}catch(e){}
+if(ss)enter(ss);
+</script><script>
+(()=>{
+const NT=[["vit","🩻 Vitals & Sleep"],["nut","🥗 Nutrition & Fitness"],["care","👩‍⚕️ Care Hub"],["info","🔬 Safe Info"],["doc","🧑‍⚕️ Clinician"],["mem","🧠 Memory"]];
+const RFX=/chest pain|can'?t breathe|cannot breathe|difficulty breathing|unconscious|faint|stroke|face droop|slurred|seizure|severe bleeding|vomiting blood|suicid|overdose|poison|heart attack/i;
+const SOS="🚨 Possible emergency. Call 108 (ambulance) or 112 NOW, or go to the nearest emergency hospital. Don't wait for chatbot advice.";
+const card=(h,t,b)=>`<div class="card"><h3>${h}${t?` <span class="tag">${t}</span>`:""}</h3>${b}</div>`;
+const out=id=>`<div class="mu" id="${id}" style="white-space:pre-wrap;margin-top:8px"></div>`;
+const inp=(id,ph,ty)=>`<input id="${id}" placeholder="${ph}" ${ty?`type="${ty}"`:""}>`;
+const btn=(id,t,c)=>`<button class="btn ${c===0?"":"p"}" id="${id}" style="margin-top:8px">${t}</button>`;
+const ta=(id,ph)=>`<textarea id="${id}" placeholder="${ph}" rows="4" style="width:100%;padding:8px 10px;border:1px solid var(--bd);border-radius:9px;background:var(--bg);color:var(--tx);font:inherit"></textarea>`;
+const sel=(id,o)=>`<select id="${id}">${o.map(x=>`<option>${x}</option>`).join("")}</select>`;
+const S5=["1","2","3","4","5"];
+const H={
+vit:card("Vitals tracker","rule alerts",`<div class="row">${inp("vs","Systolic","number")}${inp("vd","Diastolic","number")}</div><div class="row">${inp("vh","Heart rate bpm","number")}${inp("vo2","SpO₂ %","number")}</div><div class="row">${inp("vg","Glucose mg/dL","number")}${inp("vw","Weight kg","number")}</div>${btn("vsv","Save reading")}${out("vo")}<ul id="vl"></ul>`)+
+card("Sleep & stress","AI",`<div class="row">${inp("ssl","Sleep hours last night","number")}<div><label>Stress (1 calm – 5 high)</label>${sel("sst",S5)}</div></div>${btn("ssv","Save")}${btn("srt","Suggest routine")}${out("sro")}`),
+nut:card("Food log","",`<div class="row">${inp("fi","Food item")}${inp("fk","kcal","number")}${btn("fad","Add")}</div><div class="big" id="ft"></div><ul id="fl"></ul>`)+
+card("AI meal plan","AI",`<label>Goal</label>${sel("ng",["Weight loss","Maintain weight","Muscle gain","Diabetes-friendly","Heart-healthy"])}${ta("np","Food preferences, allergies, veg/non-veg")}${btn("nb","Create 1-day plan")}${out("no")}`)+
+card("Nutrition label explainer","AI",`${ta("nl","Paste the label text (ingredients, nutrients)")}${btn("nlb","Explain label")}${out("nlo")}`)+
+card("Fitness coach","AI",`<label>Fitness level</label>${sel("fl1",["Beginner","Intermediate","Advanced"])}<label>Mobility</label>${sel("fm",["Full mobility","Joint pain / limited","Wheelchair / seated only","Older adult – gentle"])}${inp("fg","Goal e.g. lose 5 kg, stamina")}${btn("fb","Recommend plan")}${out("fo")}`)+
+card("Smart daily planner","AI",`${btn("dpb","Plan my day")}${out("dpo")}`),
+care:card("Doctor appointment assistant","",`<div class="mu">Find providers, then add or cancel appointments with reminders.</div><div class="row">${btn("cn","📍 Find doctors nearby")}${btn("cr","📅 Manage appointments")}</div>`)+
+card("Follow-up assistant","AI",`<div class="row">${inp("fun","Note between visits")}${btn("fua","Add")}</div><ul id="ful"></ul>${btn("fuq","Prepare doctor questions")}${out("fuo")}`)+
+card("Summary for my clinician","AI",`${ta("sq","Your questions / concerns for the doctor")}${btn("sb","Generate summary")}${btn("sc","Copy",0)}${out("so")}`)+
+card("Telehealth","",`<div class="mu">Create a private video room, then share the link with your doctor. Share only the documents you choose.</div>${btn("tv","Create video room")}<div id="tvo" class="mu" style="margin-top:8px"></div>`)+
+card("Family care assistant","consent",`<div class="row">${inp("fn","Caregiver name")}${inp("fr","Relation")}</div><label><input type="checkbox" id="c1" style="width:auto"> Appointments</label><label><input type="checkbox" id="c2" style="width:auto"> Reminders</label><label><input type="checkbox" id="c3" style="width:auto"> Records</label>${btn("fa","Add with consent")}<ul id="fam"></ul>`),
+info:card("Evidence-based search","trusted sources",`${inp("eq","Topic e.g. type 2 diabetes diet")}<div class="row"><button class="btn" id="e1">WHO</button><button class="btn" id="e2">NHS</button><button class="btn" id="e3">PubMed</button></div>${btn("eb","AI plain summary")}${out("eo")}<div class="mu">AI can't browse live. Open the source links above to verify and see publication dates.</div>`)+
+card("Medication interaction checker","verify with pharmacist",`${ta("ix","Medicines, comma separated")}<div class="row">${btn("ixm","Use my reminders",0)}${btn("ixb","Check")}</div>${out("ixo")}`)+
+card("AI document assistant","AI",`${ta("da","Paste text of discharge summary / prescription / report")}${btn("dab","Explain simply")}${out("dao")}<div class="mu">Photos: use the Records tab (OCR).</div>`),
+doc:`<div class="alert" style="grid-column:1/-1">AI draft only. A licensed clinician must review and approve.</div>`+card("Doctor copilot & clinical notes","clinician",`<label>Task</label>${sel("dm",["Summarize patient notes","Structured SOAP note","Visit documentation draft"])}${ta("dn","Paste consultation notes or authorised transcript (no real patient data in demo)")}${btn("db","Generate draft")}${out("dout")}${btn("dap","✔ Mark approved by clinician",0)}`),
+mem:card("Personalised AI memory","you control",`<div class="mu">Only what you add here is used to personalise answers. Edit or delete anytime.</div><div class="row">${inp("mi","e.g. vegetarian, prefers morning walks")}${btn("ma","Add")}</div><ul id="ml2"></ul>${btn("mc","Clear all",0)}`)};
+const M=document.querySelector("main"),sosEl=document.querySelector(".sos");
+NT.forEach(([k,l])=>{tabs.push([k,l]);const s=document.createElement("section");s.id="p-"+k;s.className="hid";s.innerHTML=`<div class="grid">${H[k]}</div>`;sosEl.before(s);const b=document.createElement("button");b.className="tab";b.textContent=l;b.onclick=()=>tab(k);$("nav").appendChild(b)});
+const $$=(a,f)=>$(a).onclick=f,L2=()=>S,Z=(a,k)=>S[a]=S[a]||[];
+const fx=(r,o,p,src)=>{if(src&&RFX.test(src)){o.textContent=SOS;return}go(r,o,p)};
+const mx=()=>S.mem&&S.mem.length?"User-approved notes: "+S.mem.join("; ")+"\n":"";
+const a0=ask,a1=aask;ask=(p,o)=>a0(mx()+p,o);aask=(p,o)=>a1(mx()+p,o);
+const ps=()=>"Medicines: "+(S.meds||[]).map(m=>m.n).join(", ")+". Records: "+(S.recs||[]).map(r=>r.title+(r.txt?" – "+r.txt:"")).join(" | ")+". Vitals: "+Z("vit").slice(-5).map(v=>JSON.stringify(v)).join(" ");
+const R={};
+const vAl=r=>{const a=[],ok=x=>x!=null;if(ok(r.sys)&&ok(r.dia)){if(r.sys>=180||r.dia>=120)a.push("🚨 BP very high – seek urgent care");else if(r.sys>=140||r.dia>=90)a.push("⚠️ BP high – recheck, consult a doctor");else if(r.sys<90||r.dia<60)a.push("⚠️ BP low – sit down, consult a doctor")}if(ok(r.hr)&&(r.hr>100||r.hr<50))a.push("⚠️ Heart rate "+r.hr+" bpm out of usual range");if(ok(r.sp))a.push(r.sp<90?"🚨 SpO₂ very low – emergency care":r.sp<94?"⚠️ SpO₂ low – consult a doctor":"✅ SpO₂ normal");if(ok(r.gl)&&(r.gl>180||r.gl<70))a.push("⚠️ Glucose "+r.gl+" mg/dL out of range");return a};
+R.vit=()=>{const l=$("vl");l.innerHTML="";Z("vit").slice(-6).reverse().forEach(v=>{const li=el("li",v.d+" · BP "+(v.sys??"–")+"/"+(v.dia??"–")+" · HR "+(v.hr??"–")+" · SpO₂ "+(v.sp??"–")+" · Glu "+(v.gl??"–")+" · "+(v.wt??"–")+"kg");l.appendChild(li)})};
+$$("vsv",()=>{const g=i=>$(i).value===""?null:+$(i).value,r={d:day(0),sys:g("vs"),dia:g("vd"),hr:g("vh"),sp:g("vo2"),gl:g("vg"),wt:g("vw")};if(Object.values(r).slice(1).every(x=>x==null)){$("vo").textContent="Enter at least one value.";return}Z("vit").push(r);if(r.wt)S.p.wt=r.wt;save();$("vo").textContent=vAl(r).join("\n")||"Saved ✓";R.vit()});
+$$("ssv",()=>{Z("str").push({d:day(0),sl:+$("ssl").value||0,st:+$("sst").value});save();$("sro").textContent="Saved ✓"});
+$$("srt",()=>go($("srt"),$("sro"),"You are a sleep coach. "+ctx()+" Sleep/stress log (date,sleep,stress1-5): "+Z("str").slice(-7).map(x=>[x.d,x.sl,x.st].join(",")).join(" | ")+"\nSuggest a 4-line healthy sleep, activity and stress routine."));
+R.nut=()=>{const l=$("fl");l.innerHTML="";let t=0;Z("food").filter(f=>f.d===day(0)).forEach(f=>{t+=f.k;l.appendChild(el("li",f.i+" – "+f.k+" kcal"))});$("ft").textContent=t+" kcal today"};
+$$("fad",()=>{if(!$("fi").value)return;Z("food").push({d:day(0),i:$("fi").value,k:+$("fk").value||0});save();$("fi").value="";$("fk").value="";R.nut()});
+$$("nb",()=>go($("nb"),$("no"),"You are a nutrition coach for India. Profile: "+ctx()+" Goal: "+$("ng").value+". Preferences/allergies: "+$("np").value+". Foods logged today: "+Z("food").filter(f=>f.d===day(0)).map(f=>f.i+" "+f.k+"kcal").join(", ")+"\nCreate a 1-day meal plan with approx kcal."));
+$$("nlb",()=>go($("nlb"),$("nlo"),"Explain this food label in plain language; flag high sugar, sodium, saturated fat: "+$("nl").value));
+$$("fb",()=>fx($("fb"),$("fo"),"You are a fitness coach. "+ctx()+" Level: "+$("fl1").value+". Mobility: "+$("fm").value+". Goal: "+$("fg").value+"\nGive a safe 1-week plan, mention when to stop and see a doctor.",$("fg").value));
+$$("dpb",()=>go($("dpb"),$("dpo"),"Create today's health schedule: medicines "+(S.meds||[]).map(m=>m.n+" "+m.t).join(", ")+"; appointments "+(S.apps||[]).map(a=>JSON.stringify(a)).join(", ")+"; include hydration (goal 8 glasses), exercise and sleep. "+ctx()));
+$$("cn",()=>tab("near"));$$("cr",()=>tab("rem"));
+R.care=()=>{const l=$("ful");l.innerHTML="";Z("fu").forEach((f,i)=>{const li=el("li",f.d+" – "+f.t),x=el("button","✕","x");x.onclick=()=>{S.fu.splice(i,1);save();R.care()};li.appendChild(x);l.appendChild(li)});const f=$("fam");f.innerHTML="";Z("fam").forEach((c,i)=>{const li=el("li",c.n+" ("+c.r+") – "+c.c.join(", ")),x=el("button","Revoke","x");x.onclick=()=>{S.fam.splice(i,1);save();R.care()};li.appendChild(x);f.appendChild(li)})};
+$$("fua",()=>{if(!$("fun").value)return;Z("fu").push({d:day(0),t:$("fun").value});save();$("fun").value="";R.care()});
+$$("fuq",()=>go($("fuq"),$("fuo"),"Prepare 6 concise questions for my next doctor visit. Notes since last visit: "+Z("fu").map(f=>f.d+": "+f.t).join(" | ")+". "+ps()));
+$$("sb",()=>go($("sb"),$("so"),"Create a one-page summary a patient can hand to a clinician: symptoms/notes, medicines, measurements, records, and questions. Be factual, no diagnosis. "+ctx()+" Notes: "+Z("fu").map(f=>f.t).join("; ")+". "+ps()+". Patient questions: "+$("sq").value));
+$$("sc",()=>{try{navigator.clipboard.writeText($("so").textContent)}catch(e){}$("sc").textContent="Copied"});
+$$("tv",()=>{const u="https://meet.jit.si/Maruthuvam-"+Math.random().toString(36).slice(2,10),a=document.createElement("a");a.href=u;a.target="_blank";a.rel="noopener";a.textContent=u;$("tvo").textContent="Room: ";$("tvo").appendChild(a)});
+$$("fa",()=>{const c=[["c1","appointments"],["c2","reminders"],["c3","records"]].filter(x=>$(x[0]).checked).map(x=>x[1]);if(!$("fn").value||!c.length){return}Z("fam").push({n:$("fn").value,r:$("fr").value||"caregiver",c});save();$("fn").value="";R.care()});
+const src={e1:q=>"https://www.who.int/search?query=",e2:q=>"https://www.nhs.uk/search/results?q=",e3:q=>"https://pubmed.ncbi.nlm.nih.gov/?term="};
+["e1","e2","e3"].forEach(k=>$(k).onclick=()=>window.open(src[k]()+encodeURIComponent($("eq").value),"_blank","noopener"));
+$$("eb",()=>go($("eb"),$("eo"),"Give a plain summary of what trusted bodies (WHO, NHS, ICMR, CDC) generally say about: "+$("eq").value+". Name the organisation per point. Do NOT invent URLs or dates. End with 'Verify at the source links.'"));
+$$("ixm",()=>$("ix").value=(S.meds||[]).map(m=>m.n).join(", "));
+$$("ixb",()=>go($("ixb"),$("ixo"),"List known interactions between these medicines with severity (major/moderate/minor) and plain advice. Say clearly this must be verified by a pharmacist or doctor: "+$("ix").value));
+$$("dab",()=>go($("dab"),$("dao"),"Summarise this medical document in simple language: diagnosis, medicines, what to do, what abnormal values mean. No diagnosis beyond the text.\n"+$("da").value));
+$$("db",()=>go($("db"),$("dout"),"You assist a clinician. Task: "+$("dm").value+". Output a structured draft from these notes only; mark missing info as 'not documented'; end with 'DRAFT – requires clinician review'.\n"+$("dn").value));
+$$("dap",()=>{$("dout").textContent+="\n\n✔ Approved by clinician on "+day(0)});
+R.mem=()=>{const l=$("ml2");l.innerHTML="";Z("mem").forEach((m,i)=>{const li=el("li",m),e=el("button","Edit","x"),x=el("button","✕","x");e.onclick=()=>{const v=prompt("Edit",m);if(v){S.mem[i]=v;save();R.mem()}};x.onclick=()=>{S.mem.splice(i,1);save();R.mem()};li.append(e,x);l.appendChild(li)})};
+$$("ma",()=>{if(!$("mi").value)return;Z("mem").push($("mi").value);save();$("mi").value="";R.mem()});
+$$("mc",()=>{S.mem=[];save();R.mem()});
+const t0=tab;window.tab=n=>{t0(n);if(R[n])R[n]()};
+const o0=$("send").onclick;$("send").onclick=e=>{const v=$("q").value;if(RFX.test(v)){const c=$("chat");c.appendChild(el("div",v,"m u"));c.appendChild(el("div",SOS,"m a"));$("q").value="";c.scrollTop=c.scrollHeight;return}return o0.call($("send"),e)};
+})();
+</script>
+<script>
+(()=>{
+const KK="vp_apikey",MODEL="claude-sonnet-5-5";
+const gk=()=>{try{return localStorage.getItem(KK)||""}catch(e){return ""}};
+const b64=b=>new Promise((r,j)=>{const f=new FileReader();f.onload=()=>r(f.result.split(",")[1]);f.onerror=j;f.readAsDataURL(b)});
+async function shim(input,o={}){
+ let k=gk();
+ if(!k){k=(prompt("Anthropic API key podunga (sk-ant-...). Indha browser-la mattum save aagum.")||"").trim();
+  if(!k)throw{message:"claude.ai veliya AI work aaga API key venum. Header-la 🔑 button click pannunga."};
+  try{localStorage.setItem(KK,k)}catch(e){}}
+ const msgs=typeof input==="string"?[{role:"user",content:input}]:input.map(m=>({role:m.role,content:m.content}));
+ if(o.images&&o.images.length){const im=await Promise.all(o.images.map(async f=>({type:"image",source:{type:"base64",media_type:f.type||"image/jpeg",data:await b64(f)}})));const l=msgs[msgs.length-1];l.content=[...im,{type:"text",text:l.content}]}
+ let r,d;
+ try{r=await fetch("https://api.anthropic.com/v1/messages",{method:"POST",headers:{"content-type":"application/json","x-api-key":k,"anthropic-version":"2023-06-01","anthropic-dangerous-direct-browser-access":"true"},body:JSON.stringify({model:MODEL,max_tokens:1500,messages:msgs})});d=await r.json()}
+ catch(e){throw{message:"AI server-ku connect aagala. Internet check pannunga."}}
+ if(!r.ok){if(r.status===401){try{localStorage.removeItem(KK)}catch(e){}}throw{message:"AI error: "+((d.error&&d.error.message)||r.status)}}
+ const t=d.content.filter(c=>c.type==="text").map(c=>c.text).join("");
+ if(o.onText)o.onText({text:t,delta:t});
+ return{text:t,truncated:d.stop_reason==="max_tokens"};
+}
+shim.limits=async()=>({images:true});
+if(typeof claude==="undefined"||!claude||!claude.use)sample=shim;else setTimeout(()=>{if(!sample)sample=shim},10500);
+const kb=document.createElement("button");kb.className="btn";kb.textContent="🔑 AI key";kb.title="Set or clear Anthropic API key (used only outside claude.ai)";
+kb.onclick=()=>{const v=prompt("Anthropic API key (khaali vitta clear aagum):",gk());if(v===null)return;try{v.trim()?localStorage.setItem(KK,v.trim()):localStorage.removeItem(KK)}catch(e){}};
+document.getElementById("out").before(kb);
+})();
+</script>
+</body></html>

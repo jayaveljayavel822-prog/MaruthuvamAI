@@ -1,0 +1,142 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg: #fff0f3;
+  --card: #fffafb;
+  --tx: #4a1d2b;
+  --mu: #9a6677;
+  --pr: #e0457b;
+  --pr2: #ffe1ea;
+  --bd: #f6cfd9;
+  --wa: #c2410c;
+  --wb: #fff1e0;
+  --rd: #be123c;
+  --g: linear-gradient(135deg, #f472b6, #e0457b);
+}
+
+body {
+  font-family: 'Poppins', system-ui, -apple-system, sans-serif;
+  color: var(--tx);
+  background: radial-gradient(circle at 10% 0%, #ffd6e2, transparent 50%), var(--bg);
+  background-attachment: fixed;
+  overflow-x: hidden;
+}
+
+/* Floating pill capsules */
+.pills {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.pl {
+  position: absolute;
+  display: block;
+  transform: rotate(var(--r, 0deg));
+  animation: drift 10s ease-in-out infinite alternate;
+}
+
+.pl.c {
+  width: 64px;
+  height: 26px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #fff 50%, #fbd3df 50%);
+  box-shadow: inset 0 -3px 5px rgba(224, 69, 123, 0.16), 0 8px 20px rgba(224, 69, 123, 0.18);
+}
+
+.pl.c.v {
+  background: linear-gradient(90deg, #f7ebff 50%, #d2a8f7 50%);
+}
+
+.pl.r {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 28%, #fff, #fde1ea);
+  box-shadow: inset 0 -3px 5px rgba(224, 69, 123, 0.14), 0 8px 18px rgba(224, 69, 123, 0.18);
+}
+
+.pl.o {
+  width: 50px;
+  height: 22px;
+  border-radius: 12px;
+  background: linear-gradient(#fff, #fde8ee);
+  box-shadow: inset 0 -3px 5px rgba(224, 69, 123, 0.14), 0 8px 18px rgba(224, 69, 123, 0.18);
+}
+
+@keyframes drift {
+  to {
+    transform: translateY(-24px) rotate(calc(var(--r, 0deg) + 20deg));
+  }
+}
+
+@keyframes beat {
+  0%, 100% { transform: scale(1); }
+  14% { transform: scale(1.18); }
+  28% { transform: scale(1); }
+  42% { transform: scale(1.12); }
+}
+
+.hb {
+  display: inline-block;
+  animation: beat 1.6s infinite;
+}
+
+/* Animated ECG line */
+.ecg path {
+  stroke: var(--pr);
+  stroke-width: 3;
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 400;
+  animation: ecg 2.5s linear infinite;
+}
+
+@keyframes ecg {
+  from { stroke-dashoffset: 400; }
+  to { stroke-dashoffset: 0; }
+}
+
+/* Glassmorphism cards */
+.glass-card {
+  background: rgba(255, 250, 251, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--bd);
+  box-shadow: 0 10px 30px rgba(224, 69, 123, 0.08);
+  border-radius: 1.25rem;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.glass-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 16px 36px rgba(224, 69, 123, 0.15);
+}
+
+/* Custom scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: rgba(246, 207, 217, 0.2);
+}
+::-webkit-scrollbar-thumb {
+  background: #f472b6;
+  border-radius: 999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #e0457b;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, ::before, ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
